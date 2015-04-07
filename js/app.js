@@ -2,16 +2,21 @@
 Global Game Settings
 */
 var GameSetting = function() {
-    this.enemyXDiff = 100;
     this.score = 0;
+    this.xpos = 0;
 }
 
-var GameAI = function(enemyArray) {
+var GameAI = function(enemyArray, settings) {
     if (enemyArray == 'undefined') {
         enemyArray = [];
     }
+    if(settings == 'undefined') {
+        settings = {};
+    }
     this.nextRowCalled = 0;
+    this.lastAddedRow = 0;
     this.activeEnemyArray = enemyArray;
+    this.settings = settings;
     this.inactiveEnemyArray = [];
     this.numberOfAllowedEnemies = 3;
     this.numberOfCreatedEnemies = 0;
@@ -32,10 +37,9 @@ GameAI.prototype.update = function(dt) {
 }
 GameAI.prototype.addNewEnemyCallback = function(row) {
     if (this.inactiveEnemyArray.length > 0) {
-        console.log("insert from inactiveEnemyArray");
-        this.activeEnemyArray.push(this.inactiveEnemyArray.pop());
-        var enemyInSameRow;
-        console.log(row);
+        //console.log("insert from inactiveEnemyArray");
+        var topEnemy = this.inactiveEnemyArray.pop();
+        this.activeEnemyArray.push(this.updateEnemyCallback(topEnemy));
     }
     else if ( this.numberOfCreatedEnemies < this.numberOfAllowedEnemies - 1) {
         console.log("new Enemy created");
@@ -154,6 +158,30 @@ Enemy.prototype.update = function(dt) {
 }
 
 
+Enemy.prototype.setRow = function(row) {
+    switch(row){
+        case 0:
+            this.y = 60;
+            this.row = 0;
+            break;
+        case 1:
+            this.y = 145;
+            this.row = 1;
+            break;
+        case 2:
+            this.y = 225;
+            this.row = 2;
+            break;
+        default:
+            this.y = 60;
+            this.row = 0;
+    }
+}
+
+Enemy.prototype.setSpeed = function(speed) {
+    this.stepSpeed = speed;
+}
+
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     if (this.x >= this.xLeftLimit || this.x <= this.xRightLimit) {
@@ -233,6 +261,7 @@ Player.prototype.handleInput = function(movement){
             }
             break;
     }
+    this.changedPositionCallback();
 }
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -243,7 +272,6 @@ player.collisionHandler =  new CollisionHandler(player,30,113,44,27);
 player.reachedGoalCallback = function() {
     gameSetting.addToScore(10);
     var tempGameScore = gameSetting.getScore();
-
     if(tempGameScore >= 40 && tempGameScore <80) {
         this.stepPowerUp = 1;
         gameAI.numberOfAllowedEnemies = 4;
@@ -256,8 +284,11 @@ player.reachedGoalCallback = function() {
         this.stepPowerUp = 3;
         gameAI.numberOfAllowedEnemies = 6;
     }
-
     this.reset();
+}
+
+player.changedPositionCallback = function() {
+    gameSetting.xpos = this.x;
 }
 
 var allEnemies = [];
@@ -270,7 +301,7 @@ gameSetting.getScore = function() {
     return this.score;
 }
 
-var gameAI = new GameAI(allEnemies);
+var gameAI = new GameAI(allEnemies,gameSetting);
 gameAI.newEnemyCallback = function() {
     var newEnemy = new Enemy(this.getNextRow());
     newEnemy.collisionHandler = new CollisionHandler(newEnemy,3,103,95,25);
@@ -284,6 +315,27 @@ gameAI.newEnemyCallback = function() {
     }
     return newEnemy;
 };
+gameAI.updateEnemyCallback = function(enemy) {
+    enemy.setRow(this.getNextRow());
+    var currentScore = gameSetting.score;
+
+    if(currentScore >= 0 && currentScore < 40) {
+        enemy.setSpeed(100);
+    }
+
+    else if (currentScore >= 40 && currentScore < 80) {
+        enemy.setSpeed(130);
+    }
+
+    else if (currentScore >= 80 && currentScore < 120) {
+        enemy.setSpeed(150);
+    }
+
+    else if (currentScore >= 120) {
+        enemy.setSpeed(170);
+    }
+    return enemy;
+}
 
 /*
 for(var numberOfEnemies = 0; numberOfEnemies < gameSetting.numberOfEnemies ; numberOfEnemies++) {
