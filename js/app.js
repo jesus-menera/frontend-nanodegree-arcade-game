@@ -53,42 +53,43 @@ GameAI.prototype.resetEnemyCallback = function(enemy){
     this.inactiveEnemyArray.push(enemy);
 }
 
-var CollisionHandler = function(obj, paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
+var Collideable = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
     this.xOffSet = paramXOffSet;
     this.yOffSet = paramYOffSet;
     this.width = paramWidth;
     this.height = paramHeight;
-    this.obj = obj;
+    this.x = 0;
+    this.y = 0;
 }
 
-CollisionHandler.prototype.x = function() {
-    return this.obj.x + this.xOffSet;
+Collideable.prototype.xPlusOffset = function() {
+    return this.x + this.xOffSet;
 }
-CollisionHandler.prototype.y = function() {
-    return this.obj.y + this.yOffSet;
+Collideable.prototype.yPlusOffset = function() {
+    return this.y + this.yOffSet;
 }
 
-function haveCollided(entity0, entity1) {
-    if (entity0!= undefined && entity1 != undefined ) {
-        var x0 = entity0.x();
-        var y0 = entity0.y();
-        var x1 = entity1.x();
-        var y1 = entity1.y();
+Collideable.prototype.haveCollidedWith = function(collideableObj) {
+    if (collideableObj != undefined ) {
+        var x0 = this.xPlusOffset();
+        var y0 = this.yPlusOffset();
+        var x1 = collideableObj.xPlusOffset();
+        var y1 = collideableObj.yPlusOffset();
 
         var deltaY;
-        if (entity0.y > entity1.y) {
-            deltaY = y0 - y1 - entity1.height;
+        if (this.y > collideableObj.y) {
+            deltaY = y0 - y1 - collideableObj.height;
         }
         else {
-            deltaY = y1 - y0 - entity0.height;
+            deltaY = y1 - y0 - this.height;
         }
         if (deltaY <= 0) {
             var deltaX;
             if (x0 > x1) {
-                deltaX = x0 - x1 - entity1.width;
+                deltaX = x0 - x1 - collideableObj.width;
             }
             else {
-                deltaX = x1 - x0 - entity0.width;
+                deltaX = x1 - x0 - this.width;
             }
             if (deltaX <= 0) {
                 return true;
@@ -100,7 +101,8 @@ function haveCollided(entity0, entity1) {
 }
 
 // Enemies our player must avoid
-var Enemy = function(row=0) {
+var Enemy = function(row=0, paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
+    Collideable.call(this, paramXOffSet, paramYOffSet, paramWidth, paramHeight);
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     this.stepCount = 0;
@@ -132,6 +134,8 @@ var Enemy = function(row=0) {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 }
+Enemy.prototype = Object.create(Collideable.prototype);
+Enemy.prototype.constructor = Enemy;
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -194,12 +198,15 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function(){
+var Player = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight){
+    Collideable.call(this, paramXOffSet, paramYOffSet, paramWidth, paramHeight);
     this.sprite = 'images/char-boy.png';
     this.x = 200;
     this.y = 320;
     this.stepPowerUp = 0;
 }
+Player.prototype = Object.create(Collideable.prototype);
+Player.prototype.constructor = Player;
 
 Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
@@ -267,8 +274,7 @@ Player.prototype.handleInput = function(movement){
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var player = new Player();
-player.collisionHandler =  new CollisionHandler(player,30,113,44,27);
+var player = new Player(30,113,44,27);
 player.reachedGoalCallback = function() {
     gameSetting.addToScore(10);
     var tempGameScore = gameSetting.getScore();
@@ -303,8 +309,7 @@ gameSetting.getScore = function() {
 
 var gameAI = new GameAI(allEnemies,gameSetting);
 gameAI.newEnemyCallback = function() {
-    var newEnemy = new Enemy(this.getNextRow());
-    newEnemy.collisionHandler = new CollisionHandler(newEnemy,3,103,95,25);
+    var newEnemy = new Enemy(this.getNextRow(),3,103,95,25);
     newEnemy.stepCountChangedCallback = function(me) {
         if (me.x > 150) {
             gameAI.addNewEnemyCallback(me.row);

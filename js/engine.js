@@ -81,7 +81,15 @@ var Engine = (function(global) {
     function update(dt) {
         gameAI.update(dt);
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+    }
+
+    function checkCollisions() {
+        allEnemies.forEach(function(enemy) {
+            if (player.haveCollidedWith(enemy)){
+                player.reset();
+            }
+        });
     }
 
     /* This is called by the update function  and loops through all of the
