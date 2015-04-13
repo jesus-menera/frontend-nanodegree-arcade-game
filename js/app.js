@@ -318,7 +318,9 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 
-
+/**
+*   Creates instance of Player.
+**/
 var Player = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight){
     Collideable.call(this, paramXOffSet, paramYOffSet, paramWidth, paramHeight);
     this.sprite = 'images/char-boy.png';
@@ -326,6 +328,8 @@ var Player = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight){
     this.y = 320;
     this.stepPowerUp = 0;
 }
+
+//Setup inheritance from Collideable.
 Player.prototype = Object.create(Collideable.prototype);
 Player.prototype.constructor = Player;
 
@@ -333,11 +337,12 @@ Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    if(this.y == -5) {
+    if(this.y == -5) { //-5 Canvas dependent Top Goal value.
         this.reachedGoalCallback();
     }
 }
-Player.prototype.render = function(){
+
+Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     /*ctx.beginPath();
     ctx.arc(this.x+50, this.y+103,36, 0, 2 * Math.PI, false);
@@ -348,11 +353,23 @@ Player.prototype.render = function(){
     //ctx.stroke();
 
 }
-Player.prototype.reset = function(){
+
+/*
+*   Sets player back to starting point.
+*   @params none.
+*/
+Player.prototype.reset = function() {
+    //Values dependent on canvas size.
     this.x = 200;
     this.y = 320;
 }
-Player.prototype.handleInput = function(movement){
+
+/*
+*   Handles Player movement.
+*   @param: movement
+*/
+Player.prototype.handleInput = function(movement) {
+    //Player movement distance will be determined by stepPowerUp variable.
     var TAKE_WHOLE_STEP = 30 + (10*this.stepPowerUp); //60 limit
     var TAKE_TINY_STEP = 5;
     switch(movement){
@@ -396,6 +413,7 @@ Player.prototype.handleInput = function(movement){
 // Place the player object in a variable called player
 
 var player = new Player(30,113,44,27);
+
 player.reachedGoalCallback = function() {
     gameSetting.addToScore(10);
     var tempGameScore = gameSetting.getScore();
@@ -430,16 +448,22 @@ gameSetting.getScore = function() {
 
 var gameAI = new GameAI(allEnemies,gameSetting);
 
+/* Enemy instance callbacks shared by enemies. BEGIN*/
+function stepCountChanged = function(me) {
+    if (me.x > 150) {
+        gameAI.addNewEnemyCallback(me.row);
+    }
+}
+function xRightLimitReached = function(me) {
+    gameAI.resetEnemyCallback(me);
+}
+
+/* Enemy instance callbacks shared by enemies. END*/
+
 gameAI.newEnemyCallback = function() {
     var newEnemy = new Enemy(this.getNextRow(),3,103,95,25);
-    newEnemy.stepCountChangedCallback = function(me) {
-        if (me.x > 150) {
-            gameAI.addNewEnemyCallback(me.row);
-        }
-    }
-    newEnemy.xRightLimitReachedCallback = function(me) {
-        gameAI.resetEnemyCallback(me);
-    }
+    newEnemy.stepCountChangedCallback = stepCountChanged;
+    newEnemy.xRightLimitReachedCallback = xRightLimitReached;
     return newEnemy;
 };
 gameAI.updateEnemyCallback = function(enemy) {
