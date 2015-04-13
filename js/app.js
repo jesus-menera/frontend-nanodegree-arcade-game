@@ -192,8 +192,8 @@ Collideable.prototype.haveCollidedWith = function(collideableObj) {
 /** ENEMY BEGIN **/
 
 /**
-*   Creates instance of Enemy. Keeps track of speed, step taken, displaying to screen.
-    @param row.
+*   Creates instance of Enemy. Keeps track of speed, steps taken, displaying to screen.
+*   @param row.
 **/
 var Enemy = function(row, paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
     Collideable.call(this, paramXOffSet, paramYOffSet, paramWidth, paramHeight);
@@ -234,6 +234,7 @@ var Enemy = function(row, paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
 }
+//Setting up inheritance.
 Enemy.prototype = Object.create(Collideable.prototype);
 Enemy.prototype.constructor = Enemy;
 
@@ -244,25 +245,32 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     if (this.x >= this.xRightLimit) {
-        this.x = this.xLeftLimit;
+        this.x = this.xLeftLimit; //go back to the beginning when end of row is reached.
     }
     else{
-        this.x = this.x + (this.stepSpeed * dt); //possible difficult var inplace of 100;
+        this.x = this.x + (this.stepSpeed * dt); //with increase of game difficulty, increase enemy speed.
     }
 
+    //Set up enemy broadcast when certain conditions are met.
     this.stepCount++;
     if(this.stepCount >= this.stepDeltaX) {
         this.stepCount=0;
         this.stepCountChangedCallback(this);
     }
     if (this.x >= this.xRightLimit) {
-        console.log('x reached');
         this.xRightLimitReachedCallback(this);
     }
 }
 
-
+/**
+*   Setter function to set enemy row variable.
+*   @param row.
+**/
 Enemy.prototype.setRow = function(row) {
+    if(row === undefined) {
+        row = 0;
+    }
+    /* Following row values are dependent on canvas size.*/
     switch(row){
         case 0:
             this.y = 60;
@@ -282,7 +290,14 @@ Enemy.prototype.setRow = function(row) {
     }
 }
 
+/**
+*   Setter function to set enemy row speed.
+*   @param speed.
+**/
 Enemy.prototype.setSpeed = function(speed) {
+    if(speed === undefined) {
+        speed = 100;
+    }
     this.stepSpeed = speed;
 }
 
@@ -295,9 +310,15 @@ Enemy.prototype.render = function() {
     }
 }
 
+/** ENEMY END **/
+
+/** PLAYER BEGIN **/
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+
+
 var Player = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight){
     Collideable.call(this, paramXOffSet, paramYOffSet, paramWidth, paramHeight);
     this.sprite = 'images/char-boy.png';
