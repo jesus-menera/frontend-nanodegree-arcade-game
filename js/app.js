@@ -1,11 +1,18 @@
-/*
-Global Game Settings
-*/
+/**
+*   Creates game setting object. Holds game session info.
+**/
 var GameSetting = function() {
     this.score = 0;
-    this.xpos = 0;
+    this.playerXpos = 0; //not sure if needed
 }
 
+/** GAMEAI BEGIN **/
+
+/**
+*   Creates instance of game artificial intelligence. Takes care of enemy creation.
+*   @ param enemyArray: reference to array that holds all active game enemies.
+*   @ param setting:    reference to game setting object, used to store and check game state.
+**/
 var GameAI = function(enemyArray, settings) {
     if (enemyArray == 'undefined') {
         enemyArray = [];
@@ -13,68 +20,148 @@ var GameAI = function(enemyArray, settings) {
     if(settings == 'undefined') {
         settings = {};
     }
-    this.nextRowCalled = 0;
+
+    //Items related to Enemy row instantiation
+    this.prevRowCalled = 0;
     this.lastAddedRow = 0;
+
+    //Items related to Enemy creation and reuse
     this.activeEnemyArray = enemyArray;
-    this.settings = settings;
     this.inactiveEnemyArray = [];
+
+    //Items affecting game state
+    this.settings = settings;
     this.numberOfAllowedEnemies = 3;
     this.numberOfCreatedEnemies = 0;
 }
-
-GameAI.prototype.getNextRow = function() {
-    var temp = this.nextRowCalled;
-    this.nextRowCalled++;
-    if(this.nextRowCalled > 2) {
-        this.nextRowCalled = 0;
-    }
-    return temp;
-}
+/**
+*   Function called in game loop to update GameAI in each game step.
+*   @param dt:  time constant.
+**/
 GameAI.prototype.update = function(dt) {
     if(this.activeEnemyArray.length === 0){
        this.activeEnemyArray.push(this.newEnemyCallback());
     }
 }
+
+/**
+*   Returns numerical row value, in which to create next enemy.
+*   @returns Numercal value in set{012}.
+**/
+GameAI.prototype.getNextRow = function() {
+    var temp = this.prevRowCalled;
+    this.prevRowCalled++;
+    if(this.prevRowCalled > 2) {
+        this.prevtRowCalled = 0;
+    }
+    return temp;
+}
+
+/**
+*   Callback to summon enemies
+    @param row:  row.  Numerical value of row in which to put enemy.
+**/
 GameAI.prototype.addNewEnemyCallback = function(row) {
+    if (row == 'undefined') {
+        row = 0;
+    }
+
+    //Reuse enemies already created but not in use.
     if (this.inactiveEnemyArray.length > 0) {
-        //console.log("insert from inactiveEnemyArray");
         var topEnemy = this.inactiveEnemyArray.pop();
         this.activeEnemyArray.push(this.updateEnemyCallback(topEnemy));
     }
+    //Create new enemy if allowed by game constraint
     else if ( this.numberOfCreatedEnemies < this.numberOfAllowedEnemies - 1) {
-        console.log("new Enemy created");
         this.activeEnemyArray.push(this.newEnemyCallback());
         this.numberOfCreatedEnemies++;
     }
 }
+
+/**
+*   Stores enemy for reuse.
+*   @param enemy: instances of enemy to retire.
+**/
 GameAI.prototype.resetEnemyCallback = function(enemy){
-    var indexOfEnemy = this.activeEnemyArray.indexOf(enemy);
-    this.activeEnemyArray.splice(indexOfEnemy,1);
-    this.inactiveEnemyArray.push(enemy);
+    if (enemy !== 'undefined') {
+        var indexOfEnemy = this.activeEnemyArray.indexOf(enemy);
+        this.activeEnemyArray.splice(indexOfEnemy,1);
+        this.inactiveEnemyArray.push(enemy);
+    }
 }
 
+/** CALLBACKS TO BE DEFINED LATER, addressing objects outside of GameAI scope.
+
+/**
+*   Callback to create a New Enemy instance.
+    @returns reference of new enemy.
+**/
+GameAI.prototype.newEnemyCallback = undefined;
+
+/**
+*   Callback which updates given enemy with new constraits according to game state.
+*   For example: increase speed.
+*   @param enemy: reference of enemy to update.
+**/
+GameAI.prototype.updateEnemyCallback = undefined;
+
+/** GAMEAI END **/
+
+/** COLLIDEABLE BEGIN **/
+
+/**
+*   Base to class to provide collision detection mechanism.
+*   @param paramXOffSet
+    @param paramYOffSet
+    @param paramWidth
+    @param paramHeight
+**/
 var Collideable = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
+
+/**
+*   Object Box
+*   (x,y)
+*   +-------------+
+*   |             |
+*   |             |
+*   +=============|
+*   |(x,y)Offsets |
+*   |             -paramHeight
+*   |             |
+*   +------|------+
+*      paraWeight
+**/
+    this.x = 0;
+    this.y = 0;
     this.xOffSet = paramXOffSet;
     this.yOffSet = paramYOffSet;
     this.width = paramWidth;
     this.height = paramHeight;
-    this.x = 0;
-    this.y = 0;
 }
 
-Collideable.prototype.xPlusOffset = function() {
-    return this.x + this.xOffSet;
-}
-Collideable.prototype.yPlusOffset = function() {
-    return this.y + this.yOffSet;
-}
-
+/**
+*   Detects if calling object has collided with Another colliding object.
+    @param collideableObj
+    @returns true, objects have collided, false if not, undefined if not possible to compute.
+**/
 Collideable.prototype.haveCollidedWith = function(collideableObj) {
+/*
+*    DeltaX
+*   |    |
+*   +----|--+ --------
+*   |    |  |         DeltaY
+*   |    +--+------+ -
+*   |    |  |      |
+*   +----+--+      |
+*        |         |
+*        +---------+
+*/
+
     if (collideableObj != undefined ) {
-        var x0 = this.xPlusOffset();
-        var y0 = this.yPlusOffset();
-        var x1 = collideableObj.xPlusOffset();
-        var y1 = collideableObj.yPlusOffset();
+        var x0 = this.x + this.xOffSet;
+        var y0 = this.y + this.yOffSet;
+        var x1 = collideableObj.x + collideableObj.xOffSet;
+        var y1 = collideableObj.y + collideableObj.yOffSet;
 
         var deltaY;
         if (this.y > collideableObj.y) {
@@ -100,16 +187,29 @@ Collideable.prototype.haveCollidedWith = function(collideableObj) {
     return undefined;
 }
 
-// Enemies our player must avoid
-var Enemy = function(row=0, paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
+/** COLLIDEABLE END **/
+
+/** ENEMY BEGIN **/
+
+/**
+*   Creates instance of Enemy. Keeps track of speed, step taken, displaying to screen.
+    @param row.
+**/
+var Enemy = function(row, paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
     Collideable.call(this, paramXOffSet, paramYOffSet, paramWidth, paramHeight);
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-    this.stepCount = 0;
-    this.stepDeltaX = 100;
-    this.stepSpeed = 100;
-    this.row = -1;
 
+    if(row !== 'undefined') {
+        row = 0;
+    }
+
+    this.stepCount = 0;
+    this.stepDeltaX = 100; //Brodcast self info every DeltaX step.
+    this.stepSpeed = 100;
+    this.row = -1;  //Numerical value of row in which to walk.
+
+    //Following numbers depend on canvas size. Figure out new numbers if canvas size is changed.
     this.xLeftLimit = -98; //left and right most x limits on screen
     this.xRightLimit = 505;
     this.x = this.xLeftLimit;
@@ -294,7 +394,7 @@ player.reachedGoalCallback = function() {
 }
 
 player.changedPositionCallback = function() {
-    gameSetting.xpos = this.x;
+    gameSetting.playerXpos = this.x;
 }
 
 var allEnemies = [];
@@ -308,6 +408,7 @@ gameSetting.getScore = function() {
 }
 
 var gameAI = new GameAI(allEnemies,gameSetting);
+
 gameAI.newEnemyCallback = function() {
     var newEnemy = new Enemy(this.getNextRow(),3,103,95,25);
     newEnemy.stepCountChangedCallback = function(me) {
@@ -341,14 +442,6 @@ gameAI.updateEnemyCallback = function(enemy) {
     }
     return enemy;
 }
-
-/*
-for(var numberOfEnemies = 0; numberOfEnemies < gameSetting.numberOfEnemies ; numberOfEnemies++) {
-    var newEnemy = new Enemy(numberOfEnemies%3);
-    newEnemy.collisionHandler = new CollisionHandler(newEnemy,3,103,95,25);
-    allEnemies.push(newEnemy);
-}
-*/
 
 
 // This listens for key presses and sends the keys to your
