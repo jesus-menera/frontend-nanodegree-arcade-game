@@ -14,10 +14,10 @@ var GameSetting = function() {
 *   @ param setting:    reference to game setting object, used to store and check game state.
 **/
 var GameAI = function(enemyArray, settings) {
-    if (enemyArray == 'undefined') {
+    if (enemyArray == undefined) {
         enemyArray = [];
     }
-    if(settings == 'undefined') {
+    if(settings == undefined) {
         settings = {};
     }
 
@@ -52,7 +52,7 @@ GameAI.prototype.getNextRow = function() {
     var temp = this.prevRowCalled;
     this.prevRowCalled++;
     if(this.prevRowCalled > 2) {
-        this.prevtRowCalled = 0;
+        this.prevRowCalled = 0;
     }
     return temp;
 }
@@ -62,7 +62,7 @@ GameAI.prototype.getNextRow = function() {
     @param row:  row.  Numerical value of row in which to put enemy.
 **/
 GameAI.prototype.addNewEnemyCallback = function(row) {
-    if (row == 'undefined') {
+    if (row == undefined) {
         row = 0;
     }
 
@@ -83,7 +83,7 @@ GameAI.prototype.addNewEnemyCallback = function(row) {
 *   @param enemy: instances of enemy to retire.
 **/
 GameAI.prototype.resetEnemyCallback = function(enemy){
-    if (enemy !== 'undefined') {
+    if (enemy !== undefined) {
         var indexOfEnemy = this.activeEnemyArray.indexOf(enemy);
         this.activeEnemyArray.splice(indexOfEnemy,1);
         this.inactiveEnemyArray.push(enemy);
@@ -200,7 +200,7 @@ var Enemy = function(row, paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
-    if(row !== 'undefined') {
+    if(row === undefined) {
         row = 0;
     }
 
@@ -449,17 +449,16 @@ gameSetting.getScore = function() {
 var gameAI = new GameAI(allEnemies,gameSetting);
 
 /* Enemy instance callbacks shared by enemies. BEGIN*/
-function stepCountChanged = function(me) {
+function stepCountChanged(me) {
     if (me.x > 150) {
         gameAI.addNewEnemyCallback(me.row);
     }
 }
-function xRightLimitReached = function(me) {
+function xRightLimitReached(me) {
     gameAI.resetEnemyCallback(me);
 }
 
 /* Enemy instance callbacks shared by enemies. END*/
-
 gameAI.newEnemyCallback = function() {
     var newEnemy = new Enemy(this.getNextRow(),3,103,95,25);
     newEnemy.stepCountChangedCallback = stepCountChanged;
