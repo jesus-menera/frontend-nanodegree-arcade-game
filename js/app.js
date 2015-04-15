@@ -28,6 +28,8 @@ var GameAI = function(enemyArray, settings) {
     //Items related to Enemy creation and reuse
     this.activeEnemyArray = enemyArray;
     this.inactiveEnemyArray = [];
+    this.activeItemsArray = [];
+    this.inactiveItemsArray = []
 
     //Items affecting game state
     this.settings = settings;
@@ -189,6 +191,82 @@ Collideable.prototype.haveCollidedWith = function(collideableObj) {
 
 /** COLLIDEABLE END **/
 
+/** ITEM BEGIN **/
+var Item = function(x,y,type,options) {
+    if(options === undefined){
+        options ={};
+    }
+    if (options.scaleWidth !== undefined && options.scaleHeight !== undefined) {
+        this.scaleHeight = options.scaleHeight;
+        this.scaleWidth = options.scaleWidth;
+    }
+    switch(type) {
+        case "gem":
+            switch(options.color) {
+                case 'blue':
+                    this.sprite = 'images/Gem-Blue.png';
+                    break;
+                case 'green':
+                    this.sprite = 'images/Gem-Green.png';
+                    break;
+                case 'orange':
+                    this.sprite = 'images/Gem-Orange.png';
+                    break;
+            }
+            Collideable.call(this, x, y, 3,70,60,25);
+            this.type = 'gem';
+            if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
+                this.scaleHeight = 100;
+                this.scaleWidth = 65;
+            }
+
+            break;
+        case 'heart':
+            this.sprite = 'images/Heart.png';
+            Collideable.call(this, x, y, 5,50,55,25);
+            this.type = 'heart';
+            if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
+                this.scaleHeight = 120;
+                this.scaleWidth = 65;
+            }
+            break;
+        case 'key':
+            this.sprite = 'images/Key.png';
+            Collideable.call(this, x, y, 20,40,27,58);
+            this.type = 'key';
+            if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
+                this.scaleHeight = 120;
+                this.scaleWidth = 65;
+            }
+            break;
+        case 'star':
+            this.sprite = 'images/Star.png';
+            Collideable.call(this, x, y, 15,45,50,52);
+            this.type = 'star';
+            if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
+                this.scaleHeight = 120;
+                this.scaleWidth = 80;
+            }
+            break;
+    }
+    this.x = x;
+    this.y = y;
+}
+
+
+Item.prototype.render = function() {
+    switch(this.type) {
+        default:
+            ctx.drawImage(Resources.get(this.sprite), this.x, this.y,this.scaleWidth,this.scaleHeight);
+            break;
+    }
+
+    //ctx.rect(this.x+15, this.y+45, 50,52);
+    //ctx.stroke();
+}
+
+/** ITEM END **/
+
 /** ENEMY BEGIN **/
 
 /**
@@ -349,7 +427,7 @@ Player.prototype.render = function() {
     ctx.stroke();
     ctx.closePath();
     */
-    //ctx.rect(this.collisionHandler.x(), this.collisionHandler.y(), this.collisionHandler.width,this.collisionHandler.height);
+    //ctx.rect(203, 380, 65,30);
     //ctx.stroke();
 
 }
