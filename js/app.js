@@ -248,6 +248,15 @@ var Item = function(x,y,type,options) {
                 this.scaleWidth = 80;
             }
             break;
+        case 'rock':
+            this.sprite = 'images/Rock.png';
+            Collideable.call(this, x, y, 15,50,55,52);
+            this.type = 'rock';
+            if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
+                this.scaleHeight = 120;
+                this.scaleWidth = 80;
+            }
+            break;
     }
     this.x = x;
     this.y = y;
@@ -261,7 +270,7 @@ Item.prototype.render = function() {
             break;
     }
 
-    //ctx.rect(this.x+15, this.y+45, 50,52);
+    //ctx.rect(this.x+15, this.y+50, 55,55); //Use to get colliding values.
     //ctx.stroke();
 }
 
