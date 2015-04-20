@@ -86,8 +86,13 @@ var Engine = (function(global) {
 
     function checkCollisions() {
         allEnemies.forEach(function(enemy) {
-            if (player.haveCollidedWith(enemy)){
+            if (player.haveCollidedWith(enemy)) {
                 player.reset();
+            }
+        });
+        allItems.forEach(function(item) {
+            if (player.haveCollidedWith(item)) {
+                gameSetting.itemCollidedCallback(item);
             }
         });
     }
@@ -103,7 +108,6 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-
         player.update();
     }
 
@@ -161,6 +165,10 @@ var Engine = (function(global) {
 
         allEnemies.forEach(function(enemy) {
             enemy.render();
+        });
+
+        allItems.forEach(function(item) {
+            item.render();
         });
 
         player.render();

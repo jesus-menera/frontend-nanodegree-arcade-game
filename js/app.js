@@ -158,7 +158,6 @@ Collideable.prototype.haveCollidedWith = function(collideableObj) {
 *        |         |
 *        +---------+
 */
-
     if (collideableObj != undefined ) {
         var x0 = this.x + this.xOffSet;
         var y0 = this.y + this.yOffSet;
@@ -196,10 +195,11 @@ var Item = function(x,y,type,options) {
     if(options === undefined){
         options ={};
     }
-    if (options.scaleWidth !== undefined && options.scaleHeight !== undefined) {
-        this.scaleHeight = options.scaleHeight;
-        this.scaleWidth = options.scaleWidth;
-    }
+
+    //if (options.scaleWidth !== undefined && options.scaleHeight !== undefined) {
+     //   this.scaleHeight = options.scaleHeight;
+       // this.scaleWidth = options.scaleWidth;
+    //}
     switch(type) {
         case "gem":
             switch(options.color) {
@@ -219,7 +219,6 @@ var Item = function(x,y,type,options) {
                 this.scaleHeight = 100;
                 this.scaleWidth = 65;
             }
-
             break;
         case 'heart':
             this.sprite = 'images/Heart.png';
@@ -231,9 +230,11 @@ var Item = function(x,y,type,options) {
             }
             break;
         case 'key':
-            this.sprite = 'images/Key.png';
-            Collideable.call(this, x, y, 20,40,27,58);
+            Collideable.call(this, 20,75,27,28);
+            this.x=x;
+            this.y=y;
             this.type = 'key';
+            this.sprite = 'images/Key.png';
             if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
                 this.scaleHeight = 120;
                 this.scaleWidth = 65;
@@ -243,7 +244,7 @@ var Item = function(x,y,type,options) {
             this.sprite = 'images/Star.png';
             Collideable.call(this, x, y, 15,45,50,52);
             this.type = 'star';
-            if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
+            if (options === undefined ) {
                 this.scaleHeight = 120;
                 this.scaleWidth = 80;
             }
@@ -269,9 +270,8 @@ Item.prototype.render = function() {
             ctx.drawImage(Resources.get(this.sprite), this.x, this.y,this.scaleWidth,this.scaleHeight);
             break;
     }
-
-    //ctx.rect(this.x+15, this.y+50, 55,55); //Use to get colliding values.
-    //ctx.stroke();
+    ctx.rect(this.x + this.xOffSet, this.y + this.yOffSet, this.width,this.height); //Use to get colliding values.
+    ctx.stroke();
 }
 
 /** ITEM END **/
@@ -524,13 +524,34 @@ player.changedPositionCallback = function() {
 }
 
 var allEnemies = [];
+var allItems = [];
 
 var gameSetting = new GameSetting();
 gameSetting.addToScore = function(inc) {
     this.score += inc;
+    if (this.score >= 30) {
+        this.getnextLevelTokenCallback();
+    }
 }
 gameSetting.getScore = function() {
     return this.score;
+}
+
+gameSetting.getnextLevelTokenCallback = function() {
+    allItems.push(new Item(325,90,'key'));
+}
+
+gameSetting.itemCollidedCallback = function(item) {
+    console.log('item collided');
+    switch(item.type) {
+        case 'key':
+            this.wonLevelCallback();
+            break;
+    }
+}
+
+gameSetting.wonLevelCallback = function() {
+    alert('you won!');
 }
 
 var gameAI = new GameAI(allEnemies,gameSetting);
