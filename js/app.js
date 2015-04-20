@@ -3,6 +3,7 @@
 **/
 var GameSetting = function() {
     this.score = 0;
+    this.lives = 3;
     this.playerXpos = 0; //not sure if needed
 }
 
@@ -204,15 +205,19 @@ var Item = function(x,y,type,options) {
             switch(options.color) {
                 case 'blue':
                     this.sprite = 'images/Gem-Blue.png';
+                    this.value = 10;
                     break;
                 case 'green':
                     this.sprite = 'images/Gem-Green.png';
+                    this.value = 20;
                     break;
                 case 'orange':
                     this.sprite = 'images/Gem-Orange.png';
+                    this.value = 30;
                     break;
                 default:
                     this.sprite = 'images/Gem-Blue.png';
+                    this.value = 10;
                     break;
             }
             Collideable.call(this, 3,50,60,45);
@@ -549,17 +554,39 @@ gameSetting.getnextLevelTokenCallback = function() {
     allItems.push(new Item(350,90,'key'));
 }
 
-gameSetting.itemCollidedCallback = function(item) {
-    console.log('item collided');
-    switch(item.type) {
-        case 'key':
+gameSetting.itemCollidedCallback = function(type,item) {
+    console.log('enter here');
+    switch(type) {
+        case 'key': //make the key appear to pass level.
             this.wonLevelCallback();
+            break;
+        case 'bug':
+        console.log("hit bug");
+            this.lives = this.lives - 1;
+            console.log(this.lives);
+            if(this.lives > 0){
+                player.reset()
+            }
+            else{
+                this.lostLevelCallback();
+            }
+            break;
+        case 'heart':
+            this.lives++;
+            break;
+        case 'gem':
+            if(item !== undefined) {
+                this.score += item.value;
+            }
             break;
     }
 }
 
 gameSetting.wonLevelCallback = function() {
     console.log('you won!'+ Date.now());
+}
+gameSetting.lostLevelCallback = function() {
+    console.log('lost level');//render an end screen
 }
 
 var gameAI = new GameAI(allEnemies,gameSetting);

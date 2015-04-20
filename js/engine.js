@@ -87,12 +87,12 @@ var Engine = (function(global) {
     function checkCollisions() {
         allEnemies.forEach(function(enemy) {
             if (player.haveCollidedWith(enemy)) {
-                player.reset();
+                gameSetting.itemCollidedCallback('bug');
             }
         });
         allItems.forEach(function(item) {
             if (player.haveCollidedWith(item)) {
-                gameSetting.itemCollidedCallback(item);
+                gameSetting.itemCollidedCallback(item.type,item);
             }
         });
     }
@@ -180,6 +180,7 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        console.log("menu or end")
     }
 
     /* Go ahead and load all of the images we know we're going to need to
