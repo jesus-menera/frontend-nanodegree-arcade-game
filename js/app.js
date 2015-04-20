@@ -195,7 +195,6 @@ var Item = function(x,y,type,options) {
     if(options === undefined){
         options ={};
     }
-
     //if (options.scaleWidth !== undefined && options.scaleHeight !== undefined) {
      //   this.scaleHeight = options.scaleHeight;
        // this.scaleWidth = options.scaleWidth;
@@ -212,8 +211,13 @@ var Item = function(x,y,type,options) {
                 case 'orange':
                     this.sprite = 'images/Gem-Orange.png';
                     break;
+                default:
+                    this.sprite = 'images/Gem-Blue.png';
+                    break;
             }
-            Collideable.call(this, x, y, 3,70,60,25);
+            Collideable.call(this, 3,50,60,45);
+            this.x=x;
+            this.y=y;
             this.type = 'gem';
             if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
                 this.scaleHeight = 100;
@@ -221,9 +225,11 @@ var Item = function(x,y,type,options) {
             }
             break;
         case 'heart':
-            this.sprite = 'images/Heart.png';
-            Collideable.call(this, x, y, 5,50,55,25);
+            Collideable.call(this, 5,50,55,25);
+            this.x=x;
+            this.y=y;
             this.type = 'heart';
+            this.sprite = 'images/Heart.png';
             if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
                 this.scaleHeight = 120;
                 this.scaleWidth = 65;
@@ -241,26 +247,28 @@ var Item = function(x,y,type,options) {
             }
             break;
         case 'star':
-            this.sprite = 'images/Star.png';
-            Collideable.call(this, x, y, 15,45,50,52);
+            Collideable.call(this, 15,45,50,52);
+            this.x=x;
+            this.y=y;
             this.type = 'star';
-            if (options === undefined ) {
+            this.sprite = 'images/Star.png';
+            if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
                 this.scaleHeight = 120;
                 this.scaleWidth = 80;
             }
             break;
         case 'rock':
-            this.sprite = 'images/Rock.png';
-            Collideable.call(this, x, y, 15,50,55,52);
+            Collideable.call(this, 15,50,55,52);
+            this.x=x;
+            this.y=y;
             this.type = 'rock';
+            this.sprite = 'images/Rock.png';
             if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
                 this.scaleHeight = 120;
                 this.scaleWidth = 80;
             }
             break;
     }
-    this.x = x;
-    this.y = y;
 }
 
 
@@ -270,8 +278,8 @@ Item.prototype.render = function() {
             ctx.drawImage(Resources.get(this.sprite), this.x, this.y,this.scaleWidth,this.scaleHeight);
             break;
     }
-    ctx.rect(this.x + this.xOffSet, this.y + this.yOffSet, this.width,this.height); //Use to get colliding values.
-    ctx.stroke();
+    //ctx.rect(this.x + this.xOffSet, this.y + this.yOffSet, this.width,this.height); //Use to get colliding values.
+    //ctx.stroke();
 }
 
 /** ITEM END **/
@@ -436,7 +444,7 @@ Player.prototype.render = function() {
     ctx.stroke();
     ctx.closePath();
     */
-    //ctx.rect(203, 380, 65,30);
+    //ctx.rect(this.x + this.xOffSet, this.y+this.yOffSet, this.width,this.height);
     //ctx.stroke();
 
 }
@@ -538,7 +546,7 @@ gameSetting.getScore = function() {
 }
 
 gameSetting.getnextLevelTokenCallback = function() {
-    allItems.push(new Item(325,90,'key'));
+    allItems.push(new Item(350,90,'key'));
 }
 
 gameSetting.itemCollidedCallback = function(item) {
@@ -551,7 +559,7 @@ gameSetting.itemCollidedCallback = function(item) {
 }
 
 gameSetting.wonLevelCallback = function() {
-    alert('you won!');
+    console.log('you won!'+ Date.now());
 }
 
 var gameAI = new GameAI(allEnemies,gameSetting);
