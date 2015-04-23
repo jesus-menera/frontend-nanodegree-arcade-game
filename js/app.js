@@ -630,6 +630,24 @@ gameAI.updateEnemyCallback = function(enemy) {
     return enemy;
 }
 
+function choosingCharacters(movement) {
+    switch(movement) {
+        case 'right':
+            characterChosen++;
+            if(characterChosen > 3){
+                characterChosen = 0;
+            }
+            console.log(characterChosen);
+            break;
+        case 'left':
+            characterChosen--;
+            if(characterChosen < 0){
+                characterChosen = 3;
+            }
+            console.log(characterChosen);
+            break;
+    }
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -641,8 +659,11 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
 
-    if(e.keyCode >=37 || e.keyCode <=40) {
+    if(gameState===1 || e.keyCode >=37 || e.keyCode <=40) {
         player.handleInput(allowedKeys[e.keyCode]);
+    }
+    if(gameState===0) {
+        choosingCharacters(allowedKeys[e.keyCode]);
     }
 
 });

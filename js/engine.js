@@ -13,7 +13,6 @@
  * the canvas' context (ctx) object globally available to make writing app.js
  * a little simpler to work with.
  */
-
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -23,7 +22,9 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        lastTime;
+        lastTime,
+        characterChosen = 0,
+        gameState = 0; //0:choosing,1:playing
 
     canvas.width = 505;
     canvas.height = 606;
@@ -111,16 +112,7 @@ var Engine = (function(global) {
         player.update();
     }
 
-    /* This function initially draws the "game level", it will then call
-     * the renderEntities function. Remember, this function is called every
-     * game tick (or loop of the game engine) because that's how games work -
-     * they are flipbooks creating the illusion of animation but in reality
-     * they are just drawing the entire screen over and over.
-     */
-    function render() {
-        /* This array holds the relative URL to the image used
-         * for that particular row of the game level.
-         */
+    function playing() {
         var rowImages = [
                 'images/water-block.png',   // Top row is water
                 'images/stone-block.png',   // Row 1 of 3 of stone
@@ -149,9 +141,41 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
-
-
         renderEntities();
+    }
+
+    function choosing() {
+        ctx.beginPath();
+        ctx.rect(0,0,200,200);
+        ctx.fillStyle = 'black';
+        ctx.stroke();
+        //ctx.drawImage(Resources.get('images/char-boy.png'), 100, 100);
+    }
+
+    /* This function initially draws the "game level", it will then call
+     * the renderEntities function. Remember, this function is called every
+     * game tick (or loop of the game engine) because that's how games work -
+     * they are flipbooks creating the illusion of animation but in reality
+     * they are just drawing the entire screen over and over.
+     */
+    function render() {
+        /* This array holds the relative URL to the image used
+         * for that particular row of the game level.
+         */
+
+        var gameState = 0;
+        switch(gameState) {
+            case 1://playing
+                playing();
+                break;
+            case 0://choosing
+                choosing();
+                break;
+        }
+
+
+
+
     }
 
     /* This function is called by the render function and is called on each game
@@ -213,4 +237,6 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+    global.gameState = gameState;
+    global.characterChosen = characterChosen;
 })(this);
