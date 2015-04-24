@@ -423,7 +423,7 @@ Enemy.prototype.render = function() {
 **/
 var Player = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight){
     Collideable.call(this, paramXOffSet, paramYOffSet, paramWidth, paramHeight);
-    this.sprite = 'images/char-boy.png';
+    //this.sprite = 'images/char-boy.png';
     this.x = 200;
     this.y = 320;
     this.stepPowerUp = 0;
@@ -460,7 +460,7 @@ Player.prototype.render = function() {
 */
 Player.prototype.reset = function() {
     //Values dependent on canvas size.
-    this.x = 200;
+    this.x = 190;
     this.y = 320;
 }
 
@@ -645,8 +645,34 @@ function choosingCharacters(movement) {
                 characterChosen = totalNumOfPlayableChars;
             }
             break;
+        case 'enter':
+        if(characterChosen >= 4) {
+            characterChosen = 0;
+        }
+        else {
+            characterChosen++
+        }
+        switch(characterChosen){
+                case 0:
+                    player.sprite = 'images/char-boy.png';
+                    break;
+                case 1:
+                    player.sprite = 'images/char-cat-girl.png';
+                    break;
+                case 2:
+                    player.sprite = 'images/char-horn-girl.png';
+                    break;
+                case 3:
+                    player.sprite = 'images/char-pink-girl.png';
+                    break;
+                case 4:
+                    player.sprite = 'images/char-princess-girl.png';
+                    break;
+            }
+        gameState = 1;//playing
+        alert(characterChosen);
+        break;
     }
-    alert(characterChosen);
 }
 
 // This listens for key presses and sends the keys to your
@@ -656,7 +682,8 @@ document.addEventListener('keyup', function(e) {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down'
+        40: 'down',
+        13: 'enter'
     };
 
     if(gameState===1 || e.keyCode >=37 || e.keyCode <=40) {

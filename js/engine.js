@@ -144,64 +144,49 @@ var Engine = (function(global) {
         renderEntities();
     }
 
-    function choosing() {
+    function clearScreen(){
         ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
         ctx.beginPath();
         ctx.rect(0,0,ctx.canvas.width,ctx.canvas.height);
         ctx.fillStyle = 'black';
         ctx.stroke();
+    }
 
-        //ctx.drawImage(Resources.get('images/char-boy.png'), 100, 100);
-        //ctx.drawImage(Resources.get('images/char-cat-girl.png'), 200, 100);
-        //ctx.drawImage(Resources.get('images/char-horn-girl.png'), 300, 100);
-
-        var t = characterChosen;
+    function choosing() {
+        clearScreen();
+        var t = this.characterChosen;
         var x_pos = 100;
+        var y_pos = 100;
+
+        ctx.drawImage(Resources.get('images/Selector.png'), 200, y_pos);
+
         var count = 0;
         while(count < 3) {
             switch(t){
                 case 0:
-                    ctx.drawImage(Resources.get('images/char-boy.png'), x_pos, 100);
+                    ctx.drawImage(Resources.get('images/char-boy.png'), x_pos, y_pos);
                     break;
                 case 1:
-                    ctx.drawImage(Resources.get('images/char-cat-girl.png'), x_pos, 100);
+                    ctx.drawImage(Resources.get('images/char-cat-girl.png'), x_pos, y_pos);
                     break;
                 case 2:
-                    ctx.drawImage(Resources.get('images/char-horn-girl.png'), x_pos, 100);
+                    ctx.drawImage(Resources.get('images/char-horn-girl.png'), x_pos, y_pos);
                     break;
                 case 3:
-                    ctx.drawImage(Resources.get('images/char-pink-girl.png'), x_pos, 100);
+                    ctx.drawImage(Resources.get('images/char-pink-girl.png'), x_pos, y_pos);
                     break;
                 case 4:
-                    ctx.drawImage(Resources.get('images/char-princess-girl.png'), x_pos, 100);
+                    ctx.drawImage(Resources.get('images/char-princess-girl.png'), x_pos, y_pos);
                     break;
             }
             t+=1;
             x_pos += 100;
-            if(t===4){
+            if(t===5){
                 t=0;
                 //x_pos = 100;
             }
             count++;
         }
-
-        /*
-        switch(characterChosen){
-            case 0:
-                ctx.drawImage(Resources.get('images/char-boy.png'), 100, 100);
-                break;
-            case 1:
-                ctx.drawImage(Resources.get('images/char-cat-girl.png'), 100, 100);
-                break;
-            case 2:
-                ctx.drawImage(Resources.get('images/char-horn-girl.png'), 100, 100);
-                break;
-            case 3:
-                ctx.drawImage(Resources.get('images/char-pink-girl.png'), 100, 100);
-                break;
-        }
-        */
-
     }
 
     /* This function initially draws the "game level", it will then call
@@ -214,9 +199,7 @@ var Engine = (function(global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
-
-        var gameState = 0;
-        switch(gameState) {
+        switch(this.gameState) {
             case 1://playing
                 playing();
                 break;
