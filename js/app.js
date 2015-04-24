@@ -631,22 +631,22 @@ gameAI.updateEnemyCallback = function(enemy) {
 }
 
 function choosingCharacters(movement) {
+    var totalNumOfPlayableChars = 4;
     switch(movement) {
         case 'right':
             characterChosen++;
-            if(characterChosen > 3){
+            if(characterChosen >= totalNumOfPlayableChars){
                 characterChosen = 0;
             }
-            console.log(characterChosen);
             break;
         case 'left':
             characterChosen--;
             if(characterChosen < 0){
-                characterChosen = 3;
+                characterChosen = totalNumOfPlayableChars;
             }
-            console.log(characterChosen);
             break;
     }
+    alert(characterChosen);
 }
 
 // This listens for key presses and sends the keys to your

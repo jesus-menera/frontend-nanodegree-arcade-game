@@ -145,11 +145,63 @@ var Engine = (function(global) {
     }
 
     function choosing() {
+        ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
         ctx.beginPath();
-        ctx.rect(0,0,200,200);
+        ctx.rect(0,0,ctx.canvas.width,ctx.canvas.height);
         ctx.fillStyle = 'black';
         ctx.stroke();
+
         //ctx.drawImage(Resources.get('images/char-boy.png'), 100, 100);
+        //ctx.drawImage(Resources.get('images/char-cat-girl.png'), 200, 100);
+        //ctx.drawImage(Resources.get('images/char-horn-girl.png'), 300, 100);
+
+        var t = characterChosen;
+        var x_pos = 100;
+        var count = 0;
+        while(count < 3) {
+            switch(t){
+                case 0:
+                    ctx.drawImage(Resources.get('images/char-boy.png'), x_pos, 100);
+                    break;
+                case 1:
+                    ctx.drawImage(Resources.get('images/char-cat-girl.png'), x_pos, 100);
+                    break;
+                case 2:
+                    ctx.drawImage(Resources.get('images/char-horn-girl.png'), x_pos, 100);
+                    break;
+                case 3:
+                    ctx.drawImage(Resources.get('images/char-pink-girl.png'), x_pos, 100);
+                    break;
+                case 4:
+                    ctx.drawImage(Resources.get('images/char-princess-girl.png'), x_pos, 100);
+                    break;
+            }
+            t+=1;
+            x_pos += 100;
+            if(t===4){
+                t=0;
+                //x_pos = 100;
+            }
+            count++;
+        }
+
+        /*
+        switch(characterChosen){
+            case 0:
+                ctx.drawImage(Resources.get('images/char-boy.png'), 100, 100);
+                break;
+            case 1:
+                ctx.drawImage(Resources.get('images/char-cat-girl.png'), 100, 100);
+                break;
+            case 2:
+                ctx.drawImage(Resources.get('images/char-horn-girl.png'), 100, 100);
+                break;
+            case 3:
+                ctx.drawImage(Resources.get('images/char-pink-girl.png'), 100, 100);
+                break;
+        }
+        */
+
     }
 
     /* This function initially draws the "game level", it will then call
@@ -172,10 +224,6 @@ var Engine = (function(global) {
                 choosing();
                 break;
         }
-
-
-
-
     }
 
     /* This function is called by the render function and is called on each game
@@ -204,7 +252,6 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
-        console.log("menu or end")
     }
 
     /* Go ahead and load all of the images we know we're going to need to
