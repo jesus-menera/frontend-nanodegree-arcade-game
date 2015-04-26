@@ -530,6 +530,7 @@ player.reachedGoalCallback = function() {
         gameAI.numberOfAllowedEnemies = 6;
     }
     this.reset();
+    GameScreenDispatcher.trigger("player-info-render",gameSetting);
 }
 
 player.changedPositionCallback = function() {
@@ -580,6 +581,7 @@ gameSetting.itemCollidedCallback = function(type,item) {
             }
             break;
     }
+    GameScreenDispatcher.trigger("player-info-render",gameSetting);
 }
 
 gameSetting.wonLevelCallback = function() {
@@ -670,7 +672,9 @@ function choosingCharacters(movement) {
                     break;
             }
         gameState = 1;//playing
-        alert(characterChosen);
+        GameScreenDispatcher.trigger("player-info-render",gameSetting);
+
+        //alert(characterChosen);
         break;
     }
 }

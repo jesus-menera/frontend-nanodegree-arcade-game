@@ -4,6 +4,7 @@ $(function(){
 			$('body').prepend("<div id='game-screen'></div>");
 			$('canvas').appendTo($("#game-screen"));
 			$('#game-screen').append("<div id='player-info'></div>");
+			this.el = '#game-screen';
 
 			this.canvas =  document.createElement('canvas');
 			this.canvas.width = 505;
@@ -15,7 +16,7 @@ $(function(){
 		},
 		render: function(options) {
 			if(options === undefined) {
-				options = {heartNum:3,score:0};
+				options = {lives:3,score:0};
 			}
 			this.infoCanvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			var heart_xOrigin = 430;
@@ -23,7 +24,7 @@ $(function(){
 			var heart_xScale = 40;
 			var heart_yScale = 60;
 			var heart_dx = 42;
-			for(var x=0; x < options.heartNum ; x++) {
+			for(var x=0; x < options.lives ; x++) {
 				var heart_pos = heart_xOrigin - (heart_dx * x);
 				this.infoCanvasContext.drawImage(window.Resources.get('images/Heart.png'),heart_pos,heart_yOrigin,heart_xScale ,heart_yScale);
 			}
@@ -42,7 +43,15 @@ $(function(){
 	});
 
 
-	//var GameScreen = new GameScreenView();
+	var GameScreen = new GameScreenView();
+
+	var dispatcher = _.clone(Backbone.Events);
+	dispatcher.on("player-info-render",function(options){
+		GameScreen.render(options);
+	})
+
+	window.GameScreenDispatcher = dispatcher;
+
 	//var GameAction = new GameActionsRouter();
 
 	//Backbone.history.start({pushState: true})
