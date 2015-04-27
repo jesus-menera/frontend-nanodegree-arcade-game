@@ -14,9 +14,12 @@ var GameSetting = function() {
 *   @ param enemyArray: reference to array that holds all active game enemies.
 *   @ param setting:    reference to game setting object, used to store and check game state.
 **/
-var GameAI = function(enemyArray, settings) {
+var GameAI = function(enemyArray, itemArray,settings) {
     if (enemyArray == undefined) {
         enemyArray = [];
+    }
+    if (itemArray == undefined) {
+        itemArray = [];
     }
     if(settings == undefined) {
         settings = {};
@@ -29,7 +32,7 @@ var GameAI = function(enemyArray, settings) {
     //Items related to Enemy creation and reuse
     this.activeEnemyArray = enemyArray;
     this.inactiveEnemyArray = [];
-    this.activeItemsArray = [];
+    this.activeItemsArray = itemArray;
     this.inactiveItemsArray = []
 
     //Items affecting game state
@@ -79,6 +82,16 @@ GameAI.prototype.addNewEnemyCallback = function(row) {
         this.activeEnemyArray.push(this.newEnemyCallback());
         this.numberOfCreatedEnemies++;
     }
+}
+
+GameAI.prototype.addNewItemCallback = function(){
+    this.activeItemsArray.push(this.newItemCallback());
+}
+GameAI.prototype.newItemCallback = function() {
+    var randX = 0;
+    var randY = 0;
+
+    return new Item(randX,randY,'heart');
 }
 
 /**
@@ -591,7 +604,7 @@ gameSetting.lostLevelCallback = function() {
     console.log('lost level');//render an end screen
 }
 
-var gameAI = new GameAI(allEnemies,gameSetting);
+var gameAI = new GameAI(allEnemies,allItems, gameSetting);
 
 /* Enemy instance callbacks shared by enemies. BEGIN*/
 function stepCountChanged(me) {
