@@ -3,8 +3,11 @@
 **/
 var GameSetting = function() {
     this.score = 0;
+    this.deltaScore = 0;
     this.lives = 3;
     this.playerXpos = 0; //not sure if needed
+
+    this.gemsAdded = 0;
 }
 
 /** GAMEAI BEGIN **/
@@ -32,8 +35,6 @@ var GameAI = function(enemyArray, itemArray,settings) {
     //Items related to Enemy creation and reuse
     this.activeEnemyArray = enemyArray;
     this.inactiveEnemyArray = [];
-    this.activeItemsArray = itemArray;
-    this.inactiveItemsArray = []
 
     //Items affecting game state
     this.settings = settings;
@@ -82,16 +83,6 @@ GameAI.prototype.addNewEnemyCallback = function(row) {
         this.activeEnemyArray.push(this.newEnemyCallback());
         this.numberOfCreatedEnemies++;
     }
-}
-
-GameAI.prototype.addNewItemCallback = function(){
-    this.activeItemsArray.push(this.newItemCallback());
-}
-GameAI.prototype.newItemCallback = function() {
-    var randX = 0;
-    var randY = 0;
-
-    return new Item(randX,randY,'heart');
 }
 
 /**
@@ -556,9 +547,11 @@ var allItems = [];
 var gameSetting = new GameSetting();
 gameSetting.addToScore = function(inc) {
     this.score += inc;
+    this.deltaScore += inc;
     if (this.score >= 30) {
         this.getnextLevelTokenCallback();
     }
+    this.addNewItemCallback();
 }
 gameSetting.getScore = function() {
     return this.score;
@@ -603,6 +596,43 @@ gameSetting.wonLevelCallback = function() {
 gameSetting.lostLevelCallback = function() {
     console.log('lost level');//render an end screen
 }
+gameSetting.addNewItemCallback = function(){
+    //random range: random() * (max-min) + min
+    var randX = Math.random() * (380) + 10;// values between 10 390
+    var randY = Math.random() * (200) + 60; //values betwwen 60 , 260
+
+    //return new Item(randX,randY,'heart');
+    var  item = undefined;
+    if(this.deltaScore >= 40 < this.deltaScore < 69 && this.gemsAdded === 0) {
+        if(this.score >= 40 && this.score < 79) {
+            item = new Item(randX,randY,'gem',{color:'blue'});
+            this.gemsAdded++;
+        }
+        else if (this.score >= 80 && this.score < 99) {
+            item = new Item(randX,randY,'gem',{color:'green'});
+            this.gemsAdded++;
+        }
+        else if (this.score >= 100){
+            item = new Item(randX,randY,'gem',{color:'orange'});
+            this.gemsAdded++;
+        }
+    }
+    else if (this.deltaScore >= 70) {
+        if(this.lives < 3) {
+            item = new Item(randX,randY,'heart');
+        }
+        else {
+            item = new Item(randX,randY,'star');
+        }
+    }
+
+    if(item) {
+        allItems.push(item);
+        this.deltaScore = 0;
+    }
+}
+
+
 
 var gameAI = new GameAI(allEnemies,allItems, gameSetting);
 
