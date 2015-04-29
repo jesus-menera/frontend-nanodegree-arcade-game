@@ -563,6 +563,7 @@ gameSetting.getnextLevelTokenCallback = function() {
 
 gameSetting.itemCollidedCallback = function(type,item) {
     console.log('enter here');
+    var removeItem = true;
     switch(type) {
         case 'key': //make the key appear to pass level.
             this.wonLevelCallback();
@@ -577,15 +578,24 @@ gameSetting.itemCollidedCallback = function(type,item) {
             else{
                 this.lostLevelCallback();
             }
+            removeItem = false;
             break;
         case 'heart':
             this.lives++;
+            this.deltaScore = 0;
             break;
         case 'gem':
             if(item !== undefined) {
                 this.score += item.value;
+                this.deltaScore = 0;
             }
             break;
+    }
+
+    if (removeItem) {
+        var indexOfItem = allItems.indexOf(item);
+        allItems.splice(indexOfItem,1);
+        this.gemsAdded--;
     }
     GameScreenDispatcher.trigger("player-info-render",gameSetting);
 }
@@ -601,23 +611,37 @@ gameSetting.addNewItemCallback = function(){
     var randX = Math.random() * (380) + 10;// values between 10 390
     var randY = Math.random() * (200) + 60; //values betwwen 60 , 260
 
+    var randMax = 2;
+
     //return new Item(randX,randY,'heart');
     var  item = undefined;
-    if(this.deltaScore >= 40 < this.deltaScore < 69 && this.gemsAdded === 0) {
+    if(this.deltaScore >= 40 && this.deltaScore <= 70 && this.gemsAdded === 0) {
         if(this.score >= 40 && this.score < 79) {
-            item = new Item(randX,randY,'gem',{color:'blue'});
-            this.gemsAdded++;
+            randMax = 2;
         }
         else if (this.score >= 80 && this.score < 99) {
-            item = new Item(randX,randY,'gem',{color:'green'});
-            this.gemsAdded++;
+            randMax = 3;
         }
         else if (this.score >= 100){
-            item = new Item(randX,randY,'gem',{color:'orange'});
-            this.gemsAdded++;
+            randMax = 4;
+        }
+        randMax = Math.round(Math.random() * randMax);
+        switch(randMax) {
+            case 1:
+                item = new Item(randX,randY,'gem',{color:'blue'});
+                this.gemsAdded++;
+                break;
+            case 2:
+                item = new Item(randX,randY,'gem',{color:'green'});
+                this.gemsAdded++;
+                break;
+            case 3:
+                item = new Item(randX,randY,'gem',{color:'orange'});
+                this.gemsAdded++;
+                break;
         }
     }
-    else if (this.deltaScore >= 70) {
+    else if (this.deltaScore > 70) {
         if(this.lives < 3) {
             item = new Item(randX,randY,'heart');
         }
@@ -628,7 +652,6 @@ gameSetting.addNewItemCallback = function(){
 
     if(item) {
         allItems.push(item);
-        this.deltaScore = 0;
     }
 }
 
