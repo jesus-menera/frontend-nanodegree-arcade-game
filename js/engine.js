@@ -152,13 +152,24 @@ var Engine = (function(global) {
         ctx.stroke();
     }
 
+    function wonGame() {
+        clearScreen();
+        ctx.drawImage(Resources.get('images/YouWon.png'), 85,280);
+    }
+
+    function lostGame() {
+        clearScreen();
+        ctx.drawImage(Resources.get('images/YouLost.png'), 85,280);
+    }
+
     function choosing() {
         clearScreen();
         var t = this.characterChosen;
         var x_pos = 100;
-        var y_pos = 100;
-
+        var y_pos = 230;
+        ctx.drawImage(Resources.get('images/Frogger.png'), 85,120);
         ctx.drawImage(Resources.get('images/Selector.png'), 200, y_pos);
+        ctx.drawImage(Resources.get('images/Character-Select.png'),110,430);
 
         var count = 0;
         while(count < 3) {
@@ -205,6 +216,12 @@ var Engine = (function(global) {
                 break;
             case 0://choosing
                 choosing();
+                break;
+            case 2://endGame
+                lostGame();
+                break;
+            case 3://wonGame
+                wonGame();
                 break;
         }
     }
@@ -258,7 +275,11 @@ var Engine = (function(global) {
         'images/Key.png',
         'images/Rock.png',
         'images/Star.png',
-        'images/Selector.png'
+        'images/Selector.png',
+        'images/Frogger.png',
+        'images/YouWon.png',
+        'images/YouLost.png',
+        'images/Character-Select.png'
     ]);
     Resources.onReady(init);
 
