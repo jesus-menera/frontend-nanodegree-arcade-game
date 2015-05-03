@@ -509,6 +509,14 @@ Player.prototype.handleInput = function(movement) {
                 this.y += TAKE_TINY_STEP;
             }
             break;
+        case 'space':
+            if(gamePaused === true) {
+                gamePaused = false;
+            }
+            else {
+                gamePaused = true;
+            }
+            break;
     }
     this.changedPositionCallback();
 }
@@ -753,7 +761,8 @@ document.addEventListener('keyup', function(e) {
         38: 'up',
         39: 'right',
         40: 'down',
-        13: 'enter'
+        13: 'enter',
+        32: 'space'
     };
 
     if(gameState===1 || e.keyCode >=37 || e.keyCode <=40) {

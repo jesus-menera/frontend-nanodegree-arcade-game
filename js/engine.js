@@ -24,6 +24,7 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime,
         characterChosen = 0,
+        gamePaused = false,
         gameState = 0; //0:choosing,1:playing
 
     canvas.width = 505;
@@ -106,10 +107,12 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
-            enemy.update(dt);
-        });
-        player.update();
+        if (this.gamePaused === false) {
+            allEnemies.forEach(function(enemy) {
+                enemy.update(dt);
+            });
+            player.update();
+        }
     }
 
     function playing() {
@@ -160,6 +163,16 @@ var Engine = (function(global) {
     function lostGame() {
         clearScreen();
         ctx.drawImage(Resources.get('images/YouLost.png'), 85,280);
+    }
+    function pausedGame(){
+        //render paused screen.
+        ctx.globalAlpha = 0.5;
+        ctx.beginPath();
+        ctx.rect(0, 50, ctx.canvas.width, 535);
+        ctx.fillStyle = 'black';
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.drawImage(Resources.get('images/Paused.png'),100,250);
     }
 
     function choosing() {
@@ -213,6 +226,9 @@ var Engine = (function(global) {
         switch(this.gameState) {
             case 1://playing
                 playing();
+                if(this.gamePaused){
+                    pausedGame();
+                }
                 break;
             case 0://choosing
                 choosing();
@@ -279,7 +295,8 @@ var Engine = (function(global) {
         'images/Frogger.png',
         'images/YouWon.png',
         'images/YouLost.png',
-        'images/Character-Select.png'
+        'images/Character-Select.png',
+        'images/Paused.png'
     ]);
     Resources.onReady(init);
 
@@ -290,4 +307,5 @@ var Engine = (function(global) {
     global.ctx = ctx;
     global.gameState = gameState;
     global.characterChosen = characterChosen;
+    global.gamePaused = gamePaused;
 })(this);
