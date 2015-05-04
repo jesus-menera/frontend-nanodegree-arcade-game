@@ -35,12 +35,12 @@ $(function(){
 
 	var GameActionsRouter = Backbone.Router.extend({
 		routes: {
-			"/": "start"
+			"start": "start"
 		},
 		start: function() {
 			alert("start");
-		}
-	});
+		},
+ 	});
 
 
 	var GameScreen = new GameScreenView();
@@ -52,7 +52,7 @@ $(function(){
 
 	window.GameScreenDispatcher = dispatcher;
 
-	//var GameAction = new GameActionsRouter();
+	var GameActions = new GameActionsRouter;
 
-	//Backbone.history.start({pushState: true})
+	Backbone.history.start();
 });
