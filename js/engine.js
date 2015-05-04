@@ -149,10 +149,11 @@ var Engine = (function(global) {
 
     function clearScreen(){
         ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-        ctx.beginPath();
+        /*ctx.beginPath();
         ctx.rect(0,0,ctx.canvas.width,ctx.canvas.height);
         ctx.fillStyle = 'black';
         ctx.stroke();
+        */
     }
 
     function wonGame() {

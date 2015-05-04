@@ -1,7 +1,7 @@
 $(function(){
 	var GameScreenView = Backbone.View.extend({
 		initialize: function() {
-			$('body').prepend("<div id='game-screen'></div>");
+			$('#game-container').prepend("<div id='game-screen' class='row'></div>");
 			$('canvas').appendTo($("#game-screen"));
 			$('#game-screen').append("<div id='player-info'></div>");
 			this.el = '#game-screen';
