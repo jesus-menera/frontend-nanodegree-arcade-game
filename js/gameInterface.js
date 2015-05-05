@@ -8,7 +8,7 @@ $(function(){
 
 			this.canvas =  document.createElement('canvas');
 			this.canvas.width = 505;
-    		this.canvas.height = 110;
+    		this.canvas.height = 606;
 
         	this.infoCanvasContext = this.canvas.getContext('2d');
         	this.infoCanvasContext.font = '20pt Calibri';
