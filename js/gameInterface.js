@@ -6,6 +6,7 @@ $(function(){
 			$('#game-screen').append("<div id='player-info'></div>");
 			this.el = '#game-screen';
 
+			/*Set up canvas to display  Score and player lives*/
 			this.canvas =  document.createElement('canvas');
 			this.canvas.width = 505;
     		this.canvas.height = 606;
@@ -15,6 +16,7 @@ $(function(){
         	$(this.canvas).appendTo($('#player-info'));
 		},
 		render: function(options) {
+			/*Update game info display if changes occur. */
 			if(options === undefined) {
 				options = {lives:3,score:0};
 			}
@@ -38,16 +40,16 @@ $(function(){
 			'game': 'game',
 			'leaderboard':'leaderboard',
 			'about':'about'
-			/*'playing','playing',
-			'about': 'about',
-			'leaderboard':'leaderboard'*/
 		}
  	});
 
 
 	var GameScreen = new GameScreenView();
 
+	/*Global var to handle game events.*/
 	var dispatcher = _.clone(Backbone.Events);
+
+	/*Call if player score or lives changes.*/
 	dispatcher.on("player-info-render",function(options){
 		GameScreen.render(options);
 	})

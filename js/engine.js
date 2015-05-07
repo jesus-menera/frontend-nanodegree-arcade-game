@@ -147,13 +147,9 @@ var Engine = (function(global) {
         renderEntities();
     }
 
+    /* BEGIN Possible screens to render */
     function clearScreen(){
         ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-        /*ctx.beginPath();
-        ctx.rect(0,0,ctx.canvas.width,ctx.canvas.height);
-        ctx.fillStyle = 'black';
-        ctx.stroke();
-        */
     }
 
     function wonGame() {
@@ -213,6 +209,8 @@ var Engine = (function(global) {
             count++;
         }
     }
+
+    /* END Possible screens to render */
 
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
