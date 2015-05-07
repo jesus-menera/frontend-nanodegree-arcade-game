@@ -6,8 +6,8 @@ body {
 }
 #game-screen {
 	background-color: #33CCFF;
-	width: 505px;
-	height: 585px;
+	width: 535px;
+	height: 616px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
@@ -15,6 +15,9 @@ body {
     border-width: 15px;
     border-color: #000033;
 	margin: auto;
+}
+#game-controls {
+	margin: 10px 0 10px 0;
 }
 #player-info {
 	/*background-color: rgb(255, 0, 45);*/

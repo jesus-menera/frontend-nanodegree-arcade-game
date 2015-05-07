@@ -35,11 +35,12 @@ $(function(){
 
 	var GameActionsRouter = Backbone.Router.extend({
 		routes: {
-			"start": "start"
-		},
-		start: function() {
-			alert("start");
-		},
+			'newgame': 'newgame',
+			'pause': 'pause'
+			/*'playing','playing',
+			'about': 'about',
+			'leaderboard':'leaderboard'*/
+		}
  	});
 
 
@@ -53,6 +54,13 @@ $(function(){
 	window.GameScreenDispatcher = dispatcher;
 
 	var GameActions = new GameActionsRouter;
-
+	$("#game-new").on('click',function() {
+		GameActions.navigate("#");
+		GameActions.navigate("newgame", {trigger: true});
+	})
+	$("#game-pause").on('click',function() {
+		GameActions.navigate("#");
+		GameActions.navigate("pause", {trigger: true});
+	})
 	Backbone.history.start();
 });
