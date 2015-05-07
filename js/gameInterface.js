@@ -35,8 +35,9 @@ $(function(){
 
 	var GameActionsRouter = Backbone.Router.extend({
 		routes: {
-			'newgame': 'newgame',
-			'pause': 'pause'
+			'game': 'game',
+			'leaderboard':'leaderboard',
+			'about':'about'
 			/*'playing','playing',
 			'about': 'about',
 			'leaderboard':'leaderboard'*/
@@ -57,10 +58,6 @@ $(function(){
 	$("#game-new").on('click',function() {
 		GameActions.navigate("#");
 		GameActions.navigate("newgame", {trigger: true});
-	})
-	$("#game-pause").on('click',function() {
-		GameActions.navigate("#");
-		GameActions.navigate("pause", {trigger: true});
-	})
+	});
 	Backbone.history.start();
 });
