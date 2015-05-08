@@ -204,7 +204,6 @@ var Engine = (function(global) {
             x_pos += 100;
             if(t===5){
                 t=0;
-                //x_pos = 100;
             }
             count++;
         }

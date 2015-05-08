@@ -8,6 +8,7 @@ var GameSetting = function() {
     this.playerXpos = 0; //not sure if needed
 
     this.gemsAdded = 0;
+    this.gameWon = false;
 }
 
 /** GAMEAI BEGIN **/
@@ -196,6 +197,9 @@ Collideable.prototype.haveCollidedWith = function(collideableObj) {
 /** COLLIDEABLE END **/
 
 /** ITEM BEGIN **/
+/**
+* Base class for collectable items, subclass of Collieable
+**/
 var Item = function(x,y,type,options) {
     if(options === undefined){
         options ={};
@@ -279,8 +283,9 @@ var Item = function(x,y,type,options) {
             break;
     }
 }
-
-
+/**
+* Draw item to screen.
+**/
 Item.prototype.render = function() {
     switch(this.type) {
         default:
@@ -556,8 +561,9 @@ var gameSetting = new GameSetting();
 gameSetting.addToScore = function(inc) {
     this.score += inc;
     this.deltaScore += inc;
-    if (this.score >= 30) {
+    if (!this.gameWon && this.score >= 100) {
         this.getnextLevelTokenCallback();
+        this.gameWon = true;
     }
     this.addNewItemCallback();
 }
@@ -609,7 +615,7 @@ gameSetting.itemCollidedCallback = function(type,item) {
 }
 
 gameSetting.wonLevelCallback = function() {
-    console.log('you won!'+ Date.now());
+    gameState = 3;
 }
 gameSetting.lostLevelCallback = function() {
     console.log('lost level');//render an end screen
