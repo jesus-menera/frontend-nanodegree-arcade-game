@@ -449,7 +449,6 @@ Player.prototype.update = function(dt) {
     if(this.y <= -15 && gameState === 1) { //-5 Canvas dependent Top Goal value.
         this.reachedGoalCallback();
     }
-    console.log(this.x +" "+this.y);
 }
 
 Player.prototype.render = function() {
