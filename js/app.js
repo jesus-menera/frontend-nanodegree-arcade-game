@@ -446,8 +446,8 @@ Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    if(this.y == -5) { //-5 Canvas dependent Top Goal value.
-        //this.reachedGoalCallback();
+    if(this.y <= -15 && gameState === 1) { //-5 Canvas dependent Top Goal value.
+        this.reachedGoalCallback();
     }
     console.log(this.x +" "+this.y);
 }
@@ -495,7 +495,7 @@ lowerXLimit |          | upperXLimit
              lowerYLimit
 */
 
-    var upperYLimit = -11;
+    var upperYLimit = -15;
     var lowerYLimit = 360;
     var lowerXlimit = -10;
     var upperXLimit = 412;
