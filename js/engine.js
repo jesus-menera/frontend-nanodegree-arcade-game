@@ -116,6 +116,7 @@ var Engine = (function(global) {
     }
 
     function playing() {
+
         var rowImages = [
                 'images/water-block.png',   // Top row is water
                 'images/stone-block.png',   // Row 1 of 3 of stone
@@ -173,7 +174,6 @@ var Engine = (function(global) {
     }
 
     function choosing() {
-        clearScreen();
         var t = this.characterChosen;
         var x_pos = 100;
         var y_pos = 230;
@@ -221,6 +221,7 @@ var Engine = (function(global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
+        clearScreen();
         switch(this.gameState) {
             case 1://playing
                 playing();

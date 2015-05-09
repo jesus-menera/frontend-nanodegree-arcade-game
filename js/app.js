@@ -447,8 +447,9 @@ Player.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     if(this.y == -5) { //-5 Canvas dependent Top Goal value.
-        this.reachedGoalCallback();
+        //this.reachedGoalCallback();
     }
+    console.log(this.x +" "+this.y);
 }
 
 Player.prototype.render = function() {
@@ -481,37 +482,55 @@ Player.prototype.handleInput = function(movement) {
     //Player movement distance will be determined by stepPowerUp variable.
     var TAKE_WHOLE_STEP = 30 + (10*this.stepPowerUp); //60 limit
     var TAKE_TINY_STEP = 5;
+
+/*
+   screen
+             upperYLimit
+             ----------
+            |          |
+lowerXLimit |          | upperXLimit
+            |          |
+            |          |
+             ----------
+             lowerYLimit
+*/
+
+    var upperYLimit = -11;
+    var lowerYLimit = 360;
+    var lowerXlimit = -10;
+    var upperXLimit = 412;
+
     switch(movement){
         case 'left':
-            if( this.x - TAKE_WHOLE_STEP > -10){
+            if( this.x - TAKE_WHOLE_STEP >= lowerXlimit){
                 this.x -= TAKE_WHOLE_STEP;
             }
-            else if( this.x - TAKE_TINY_STEP > -10){
-                this.x -= TAKE_TINY_STEP;
+            else {
+                this.x = lowerXlimit;
             }
             break;
         case 'up':
-            if( this.y - TAKE_WHOLE_STEP > -10){
+            if( this.y - TAKE_WHOLE_STEP >= upperYLimit){
                 this.y -= TAKE_WHOLE_STEP;
             }
-            else if( this.y - TAKE_TINY_STEP > -10){
-                this.y -= TAKE_TINY_STEP;
+            else {
+                this.y = upperYLimit;
             }
             break;
         case 'right':
-            if( this.x + TAKE_WHOLE_STEP < 412){
+            if( this.x + TAKE_WHOLE_STEP <= upperXLimit){
                 this.x += TAKE_WHOLE_STEP;
             }
-            else if( this.x + TAKE_TINY_STEP < 412){
-                this.x += TAKE_TINY_STEP;
+            else {
+                this.x = upperXLimit;
             }
             break;
         case 'down':
-            if( this.y + TAKE_WHOLE_STEP < 430){
+            if( this.y + TAKE_WHOLE_STEP <= lowerYLimit){
                 this.y += TAKE_WHOLE_STEP;
             }
-            else if( this.y + TAKE_TINY_STEP < 430){
-                this.y += TAKE_TINY_STEP;
+            else {
+                this.y = lowerYLimit;
             }
             break;
         case 'space':
@@ -753,7 +772,7 @@ function choosingCharacters(movement) {
             }
         gameState = 1;//playing
         GameScreenDispatcher.trigger("player-info-render",gameSetting);
-
+        player.reset();
         //alert(characterChosen);
         break;
     }
@@ -771,11 +790,12 @@ document.addEventListener('keyup', function(e) {
         32: 'space'
     };
 
-    if(gameState===1 || e.keyCode >=37 || e.keyCode <=40) {
-        player.handleInput(allowedKeys[e.keyCode]);
+    if((e.keyCode >=37 && e.keyCode <=40) || e.keyCode===13 || e.keyCode ===32){
+       if(gameState===1 ) {
+            player.handleInput(allowedKeys[e.keyCode]);
+        }
+        else if(gameState===0) {
+            choosingCharacters(allowedKeys[e.keyCode]);
+        }
     }
-    if(gameState===0) {
-        choosingCharacters(allowedKeys[e.keyCode]);
-    }
-
 });
