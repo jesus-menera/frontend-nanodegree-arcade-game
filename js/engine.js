@@ -179,7 +179,9 @@ var Engine = (function(global) {
         var y_pos = 230;
         ctx.drawImage(Resources.get('images/Frogger.png'), 85,120);
         ctx.drawImage(Resources.get('images/Selector.png'), 200, y_pos);
-        ctx.drawImage(Resources.get('images/Character-Select.png'),110,430);
+        ctx.drawImage(Resources.get('images/Character-Select.png'),150,430);
+        ctx.drawImage(Resources.get('images/leftIndicator.png'), 75,330);
+         ctx.drawImage(Resources.get('images/rightIndicator.png'), 400,330);
 
         var count = 0;
         while(count < 3) {
@@ -295,7 +297,9 @@ var Engine = (function(global) {
         'images/YouWon.png',
         'images/YouLost.png',
         'images/Character-Select.png',
-        'images/Paused.png'
+        'images/Paused.png',
+        'images/leftIndicator.png',
+        'images/rightIndicator.png'
     ]);
     Resources.onReady(init);
 
