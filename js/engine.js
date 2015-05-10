@@ -241,6 +241,8 @@ var Engine = (function(global) {
                 lostGame();
                 break;
             case 3://wonGame
+                playing();
+                screenOverlay();
                 wonGame();
                 break;
         }
