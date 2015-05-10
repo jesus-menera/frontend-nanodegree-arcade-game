@@ -601,13 +601,11 @@ gameSetting.itemCollidedCallback = function(type,item) {
             this.wonLevelCallback();
             break;
         case 'bug':
-        console.log("hit bug");
             this.lives = this.lives - 1;
-            console.log(this.lives);
-            if(this.lives > 0){
+            if(this.lives > 0) {
                 player.reset()
             }
-            else{
+            else {
                 this.lostLevelCallback();
             }
             removeItem = false;
@@ -633,10 +631,12 @@ gameSetting.itemCollidedCallback = function(type,item) {
 }
 
 gameSetting.wonLevelCallback = function() {
+    gamePaused = true;
     gameState = 3;
 }
-gameSetting.lostLevelCallback = function() {
-    console.log('lost level');//render an end screen
+gameSetting.lostLevelCallback = function() {gamePaused = true;
+    gamePaused = true;
+    gameState = 2;
 }
 gameSetting.addNewItemCallback = function(){
     //random range: random() * (max-min) + min

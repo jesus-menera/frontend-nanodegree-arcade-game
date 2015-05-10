@@ -149,27 +149,28 @@ var Engine = (function(global) {
     }
 
     /* BEGIN Possible screens to render */
-    function clearScreen(){
+    function screenOverlay() {
+        ctx.globalAlpha = 0.5;
+        ctx.beginPath();
+        ctx.rect(0, 0, ctx.canvas.width, 585);
+        ctx.fillStyle = 'black';
+        ctx.fill();
+        ctx.globalAlpha = 1;
+    }
+    function clearScreen() {
         ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
     }
 
     function wonGame() {
-        clearScreen();
         ctx.drawImage(Resources.get('images/YouWon.png'), 85,280);
     }
 
     function lostGame() {
-        clearScreen();
         ctx.drawImage(Resources.get('images/YouLost.png'), 85,280);
     }
     function pausedGame(){
         //render paused screen.
-        ctx.globalAlpha = 0.5;
-        ctx.beginPath();
-        ctx.rect(0, 50, ctx.canvas.width, 535);
-        ctx.fillStyle = 'black';
-        ctx.fill();
-        ctx.globalAlpha = 1;
+        screenOverlay();
         ctx.drawImage(Resources.get('images/Paused.png'),100,250);
     }
 
@@ -235,6 +236,8 @@ var Engine = (function(global) {
                 choosing();
                 break;
             case 2://endGame
+                playing();
+                screenOverlay();
                 lostGame();
                 break;
             case 3://wonGame

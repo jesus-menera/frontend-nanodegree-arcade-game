@@ -32,6 +32,9 @@ $(function(){
 			}
       		this.infoCanvasContext.fillText('Score:  ' + options.score , 30, 85);
         	return this;
+		},
+		hide: function() {
+			$("#player-info").hide();
 		}
 	});
 
@@ -52,7 +55,10 @@ $(function(){
 	/*Call if player score or lives changes.*/
 	dispatcher.on("player-info-render",function(options){
 		GameScreen.render(options);
-	})
+	});
+	dispatcher.on("player-info-hide",function(){
+		GameScreen.hide();
+	});
 
 	window.GameScreenDispatcher = dispatcher;
 
