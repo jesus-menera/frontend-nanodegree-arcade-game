@@ -472,8 +472,8 @@ Player.prototype.render = function() {
 */
 Player.prototype.reset = function() {
     //Values dependent on canvas size.
-    this.x = 190;
-    this.y = 320;
+    this.x = 200;
+    this.y = 300;
 };
 
 /*
@@ -482,7 +482,9 @@ Player.prototype.reset = function() {
 */
 Player.prototype.handleInput = function(movement) {
     //Player movement distance will be determined by stepPowerUp variable.
-    var TAKE_WHOLE_STEP = 30 + (10*this.stepPowerUp); //60 limit
+    //var TAKE_WHOLE_STEP = 30 + (10*this.stepPowerUp); //60 limit
+    var horizontalStep = 100;
+    var verticalStep = 80;
 /*
    screen
              upperYLimit
@@ -502,32 +504,32 @@ lowerXLimit |          | upperXLimit
 
     switch(movement){
         case 'left':
-            if( this.x - TAKE_WHOLE_STEP >= lowerXlimit) {
-                this.x -= TAKE_WHOLE_STEP;
+            if( this.x - horizontalStep >= lowerXlimit) {
+                this.x -= horizontalStep;
             }
             else {
                 this.x = lowerXlimit;
             }
             break;
         case 'up':
-            if( this.y - TAKE_WHOLE_STEP >= upperYLimit) {
-                this.y -= TAKE_WHOLE_STEP;
+            if( this.y - verticalStep >= upperYLimit) {
+                this.y -= verticalStep;
             }
             else {
                 this.y = upperYLimit;
             }
             break;
         case 'right':
-            if( this.x + TAKE_WHOLE_STEP <= upperXLimit) {
-                this.x += TAKE_WHOLE_STEP;
+            if( this.x + horizontalStep <= upperXLimit) {
+                this.x += horizontalStep;
             }
             else {
                 this.x = upperXLimit;
             }
             break;
         case 'down':
-            if( this.y + TAKE_WHOLE_STEP <= lowerYLimit) {
-                this.y += TAKE_WHOLE_STEP;
+            if( this.y + verticalStep <= lowerYLimit) {
+                this.y += verticalStep;
             }
             else {
                 this.y = lowerYLimit;
