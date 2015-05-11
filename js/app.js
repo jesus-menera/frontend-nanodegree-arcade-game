@@ -19,13 +19,13 @@ var GameSetting = function() {
 *   @ param setting:    reference to game setting object, used to store and check game state.
 **/
 var GameAI = function(enemyArray, itemArray,settings) {
-    if (enemyArray == undefined) {
+    if (enemyArray === undefined) {
         enemyArray = [];
     }
-    if (itemArray == undefined) {
+    if (itemArray === undefined) {
         itemArray = [];
     }
-    if(settings == undefined) {
+    if(settings === undefined) {
         settings = {};
     }
 
@@ -165,7 +165,7 @@ Collideable.prototype.haveCollidedWith = function(collideableObj) {
 *        |         |
 *        +---------+
 */
-    if (collideableObj != undefined ) {
+    if (collideableObj !== undefined) {
         var x0 = this.x + this.xOffSet;
         var y0 = this.y + this.yOffSet;
         var x1 = collideableObj.x + collideableObj.xOffSet;
@@ -210,7 +210,7 @@ var Item = function(x,y,type,options) {
        // this.scaleWidth = options.scaleWidth;
     //}
     switch(type) {
-        case "gem":
+        case 'gem':
             switch(options.color) {
                 case 'blue':
                     this.sprite = 'images/Gem-Blue.png';
@@ -483,8 +483,6 @@ Player.prototype.reset = function() {
 Player.prototype.handleInput = function(movement) {
     //Player movement distance will be determined by stepPowerUp variable.
     var TAKE_WHOLE_STEP = 30 + (10*this.stepPowerUp); //60 limit
-    var TAKE_TINY_STEP = 5;
-
 /*
    screen
              upperYLimit
@@ -601,7 +599,7 @@ gameSetting.addToScore = function(inc) {
     this.addNewItemCallback(); //decided if player deserves a new item or not.
 
     //update player info display
-    GameScreenDispatcher.trigger("player-info-render",gameSetting);
+    GameScreenDispatcher.trigger('player-info-render',gameSetting);
 };
 
 gameSetting.getScore = function() {
@@ -627,7 +625,7 @@ gameSetting.itemCollidedCallback = function(type,item) {
         case 'bug':
             this.lives = this.lives - 1;
             if(this.lives > 0) {
-                player.reset()
+                player.reset();
             }
             else {
                 this.lostLevelCallback();
@@ -654,10 +652,10 @@ gameSetting.itemCollidedCallback = function(type,item) {
     }
 
     //Player score or hearts may have affected, update player info display.
-    GameScreenDispatcher.trigger("player-info-render",gameSetting);
+    GameScreenDispatcher.trigger('player-info-render',gameSetting);
 };
 
-//Todo: come up with a descriptive object to hold gameState codes: {'playing', 'choosing','wonGame', "lostGame"}.
+//Todo: come up with a descriptive object to hold gameState codes: {'playing', 'choosing','wonGame', 'lostGame'}.
 gameSetting.wonLevelCallback = function() {
     gamePaused = true;
     gameState = 3;
@@ -675,7 +673,7 @@ gameSetting.addNewItemCallback = function() {
 
     var randMax = 2;
 
-    var  item = undefined;
+    var  item;
     if(this.deltaScore >= 40 && this.deltaScore <= 70 && this.gemsAdded === 0) {
         if(this.score >= 40 && this.score < 79) {
             randMax = 2;
@@ -714,7 +712,7 @@ gameSetting.addNewItemCallback = function() {
     if(item) {
         allItems.push(item);
     }
-}
+};
 
 var gameAI = new GameAI(allEnemies,allItems, gameSetting);
 
@@ -784,7 +782,7 @@ function choosingCharacters(movement) {
                 characterChosen = 0;
             }
             else {
-                characterChosen++
+                characterChosen++;
             }
             switch(characterChosen) {
                 case 0:
@@ -805,7 +803,7 @@ function choosingCharacters(movement) {
             }
 
         gameState = 1;//playing
-        GameScreenDispatcher.trigger("player-info-render",gameSetting);
+        GameScreenDispatcher.trigger('player-info-render',gameSetting);
         player.reset();
         break;
     }
