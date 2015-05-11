@@ -9,7 +9,7 @@ var GameSetting = function() {
 
     this.gemsAdded = 0;
     this.gameWon = false;
-}
+};
 
 /** GAMEAI BEGIN **/
 
@@ -41,16 +41,17 @@ var GameAI = function(enemyArray, itemArray,settings) {
     this.settings = settings;
     this.numberOfAllowedEnemies = 3;
     this.numberOfCreatedEnemies = 0;
-}
+};
 /**
 *   Function called in game loop to update GameAI in each game step.
 *   @param dt:  time constant.
 **/
 GameAI.prototype.update = function(dt) {
-    if(this.activeEnemyArray.length === 0){
+    //if there's no enemies on screen, add one.
+    if(this.activeEnemyArray.length === 0) {
        this.activeEnemyArray.push(this.newEnemyCallback());
     }
-}
+};
 
 /**
 *   Returns numerical row value, in which to create next enemy.
@@ -63,14 +64,14 @@ GameAI.prototype.getNextRow = function() {
         this.prevRowCalled = 0;
     }
     return temp;
-}
+};
 
 /**
 *   Callback to summon enemies
     @param row:  row.  Numerical value of row in which to put enemy.
 **/
 GameAI.prototype.addNewEnemyCallback = function(row) {
-    if (row == undefined) {
+    if (row === undefined) {
         row = 0;
     }
 
@@ -84,7 +85,7 @@ GameAI.prototype.addNewEnemyCallback = function(row) {
         this.activeEnemyArray.push(this.newEnemyCallback());
         this.numberOfCreatedEnemies++;
     }
-}
+};
 
 /**
 *   Stores enemy for reuse.
@@ -96,7 +97,7 @@ GameAI.prototype.resetEnemyCallback = function(enemy){
         this.activeEnemyArray.splice(indexOfEnemy,1);
         this.inactiveEnemyArray.push(enemy);
     }
-}
+};
 
 /** CALLBACKS TO BE DEFINED LATER, addressing objects outside of GameAI scope.
 
@@ -145,7 +146,7 @@ var Collideable = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight) 
     this.yOffSet = paramYOffSet;
     this.width = paramWidth;
     this.height = paramHeight;
-}
+};
 
 /**
 *   Detects if calling object has collided with Another colliding object.
@@ -192,7 +193,7 @@ Collideable.prototype.haveCollidedWith = function(collideableObj) {
         return false;
     }
     return undefined;
-}
+};
 
 /** COLLIDEABLE END **/
 
@@ -201,7 +202,7 @@ Collideable.prototype.haveCollidedWith = function(collideableObj) {
 * Base class for collectable items, subclass of Collieable
 **/
 var Item = function(x,y,type,options) {
-    if(options === undefined){
+    if(options === undefined) {
         options ={};
     }
     //if (options.scaleWidth !== undefined && options.scaleHeight !== undefined) {
@@ -282,7 +283,8 @@ var Item = function(x,y,type,options) {
             }
             break;
     }
-}
+};
+
 /**
 * Draw item to screen.
 **/
@@ -294,7 +296,7 @@ Item.prototype.render = function() {
     }
     //ctx.rect(this.x + this.xOffSet, this.y + this.yOffSet, this.width,this.height); //Use to get colliding values.
     //ctx.stroke();
-}
+};
 
 /** ITEM END **/
 
@@ -322,7 +324,8 @@ var Enemy = function(row, paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
     this.xLeftLimit = -98; //left and right most x limits on screen
     this.xRightLimit = 505;
     this.x = this.xLeftLimit;
-    switch(row){
+
+    switch(row) {
         case 0:
             this.y = 60;
             this.row = 0;
@@ -342,7 +345,7 @@ var Enemy = function(row, paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-}
+};
 //Setting up inheritance.
 Enemy.prototype = Object.create(Collideable.prototype);
 Enemy.prototype.constructor = Enemy;
@@ -369,7 +372,7 @@ Enemy.prototype.update = function(dt) {
     if (this.x >= this.xRightLimit) {
         this.xRightLimitReachedCallback(this);
     }
-}
+};
 
 /**
 *   Setter function to set enemy row variable.
@@ -397,7 +400,7 @@ Enemy.prototype.setRow = function(row) {
             this.y = 60;
             this.row = 0;
     }
-}
+};
 
 /**
 *   Setter function to set enemy row speed.
@@ -408,7 +411,7 @@ Enemy.prototype.setSpeed = function(speed) {
         speed = 100;
     }
     this.stepSpeed = speed;
-}
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -417,7 +420,7 @@ Enemy.prototype.render = function() {
         //ctx.rect(this.collisionHandler.x(), this.collisionHandler.y(), this.collisionHandler.width,this.collisionHandler.height);
         //ctx.stroke();
     }
-}
+};
 
 /** ENEMY END **/
 
@@ -436,7 +439,7 @@ var Player = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight){
     this.x = 200;
     this.y = 320;
     this.stepPowerUp = 0;
-}
+};
 
 //Setup inheritance from Collideable.
 Player.prototype = Object.create(Collideable.prototype);
@@ -449,7 +452,7 @@ Player.prototype.update = function(dt) {
     if(this.y <= -15 && gameState === 1) { //-5 Canvas dependent Top Goal value.
         this.reachedGoalCallback();
     }
-}
+};
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -461,7 +464,7 @@ Player.prototype.render = function() {
     //ctx.rect(this.x + this.xOffSet, this.y+this.yOffSet, this.width,this.height);
     //ctx.stroke();
 
-}
+};
 
 /*
 *   Sets player back to starting point.
@@ -471,7 +474,7 @@ Player.prototype.reset = function() {
     //Values dependent on canvas size.
     this.x = 190;
     this.y = 320;
-}
+};
 
 /*
 *   Handles Player movement.
@@ -501,7 +504,7 @@ lowerXLimit |          | upperXLimit
 
     switch(movement){
         case 'left':
-            if( this.x - TAKE_WHOLE_STEP >= lowerXlimit){
+            if( this.x - TAKE_WHOLE_STEP >= lowerXlimit) {
                 this.x -= TAKE_WHOLE_STEP;
             }
             else {
@@ -509,7 +512,7 @@ lowerXLimit |          | upperXLimit
             }
             break;
         case 'up':
-            if( this.y - TAKE_WHOLE_STEP >= upperYLimit){
+            if( this.y - TAKE_WHOLE_STEP >= upperYLimit) {
                 this.y -= TAKE_WHOLE_STEP;
             }
             else {
@@ -517,7 +520,7 @@ lowerXLimit |          | upperXLimit
             }
             break;
         case 'right':
-            if( this.x + TAKE_WHOLE_STEP <= upperXLimit){
+            if( this.x + TAKE_WHOLE_STEP <= upperXLimit) {
                 this.x += TAKE_WHOLE_STEP;
             }
             else {
@@ -525,7 +528,7 @@ lowerXLimit |          | upperXLimit
             }
             break;
         case 'down':
-            if( this.y + TAKE_WHOLE_STEP <= lowerYLimit){
+            if( this.y + TAKE_WHOLE_STEP <= lowerYLimit) {
                 this.y += TAKE_WHOLE_STEP;
             }
             else {
@@ -542,16 +545,21 @@ lowerXLimit |          | upperXLimit
             break;
     }
     this.changedPositionCallback();
-}
+};
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
 var player = new Player(30,113,44,27);
 
+/*
+*   Call to handle player reaching goal: water.
+*/
 player.reachedGoalCallback = function() {
     gameSetting.addToScore(10);
     var tempGameScore = gameSetting.getScore();
+
     if(tempGameScore >= 40 && tempGameScore <80) {
         this.stepPowerUp = 1;
         gameAI.numberOfAllowedEnemies = 4;
@@ -564,37 +572,53 @@ player.reachedGoalCallback = function() {
         this.stepPowerUp = 3;
         gameAI.numberOfAllowedEnemies = 6;
     }
-    this.reset();
-    GameScreenDispatcher.trigger("player-info-render",gameSetting);
-}
 
+    this.reset();//place player back to origin
+};
+
+/*
+*   Todo: will use this callback to update gameSetting player position.
+*/
 player.changedPositionCallback = function() {
     gameSetting.playerXpos = this.x;
-}
+};
 
 var allEnemies = [];
 var allItems = [];
 
 var gameSetting = new GameSetting();
+
+/*
+*   Update player score, update player info display.
+*/
 gameSetting.addToScore = function(inc) {
     this.score += inc;
     this.deltaScore += inc;
     if (!this.gameWon && this.score >= 100) {
-        this.getnextLevelTokenCallback();
+        this.getnextLevelTokenCallback(); //render key to win level.
         this.gameWon = true;
     }
-    this.addNewItemCallback();
-}
+    this.addNewItemCallback(); //decided if player deserves a new item or not.
+
+    //update player info display
+    GameScreenDispatcher.trigger("player-info-render",gameSetting);
+};
+
 gameSetting.getScore = function() {
     return this.score;
-}
+};
 
+/*
+* Call when player has reached a winning score, and render key item.
+*/
 gameSetting.getnextLevelTokenCallback = function() {
     allItems.push(new Item(350,90,'key'));
-}
+};
 
+/*
+* When player collides with an item, decided what todo based on item.
+*/
 gameSetting.itemCollidedCallback = function(type,item) {
-    console.log('enter here');
     var removeItem = true;
     switch(type) {
         case 'key': //make the key appear to pass level.
@@ -622,30 +646,35 @@ gameSetting.itemCollidedCallback = function(type,item) {
             break;
     }
 
+    //remove item from allItems array.
     if (removeItem) {
         var indexOfItem = allItems.indexOf(item);
         allItems.splice(indexOfItem,1);
         this.gemsAdded--;
     }
-    GameScreenDispatcher.trigger("player-info-render",gameSetting);
-}
 
+    //Player score or hearts may have affected, update player info display.
+    GameScreenDispatcher.trigger("player-info-render",gameSetting);
+};
+
+//Todo: come up with a descriptive object to hold gameState codes: {'playing', 'choosing','wonGame', "lostGame"}.
 gameSetting.wonLevelCallback = function() {
     gamePaused = true;
     gameState = 3;
-}
+};
+
 gameSetting.lostLevelCallback = function() {gamePaused = true;
     gamePaused = true;
     gameState = 2;
-}
-gameSetting.addNewItemCallback = function(){
+};
+
+gameSetting.addNewItemCallback = function() {
     //random range: random() * (max-min) + min
     var randX = Math.random() * (380) + 10;// values between 10 390
     var randY = Math.random() * (200) + 60; //values betwwen 60 , 260
 
     var randMax = 2;
 
-    //return new Item(randX,randY,'heart');
     var  item = undefined;
     if(this.deltaScore >= 40 && this.deltaScore <= 70 && this.gemsAdded === 0) {
         if(this.score >= 40 && this.score < 79) {
@@ -687,8 +716,6 @@ gameSetting.addNewItemCallback = function(){
     }
 }
 
-
-
 var gameAI = new GameAI(allEnemies,allItems, gameSetting);
 
 /* Enemy instance callbacks shared by enemies. BEGIN*/
@@ -700,14 +727,18 @@ function stepCountChanged(me) {
 function xRightLimitReached(me) {
     gameAI.resetEnemyCallback(me);
 }
-
 /* Enemy instance callbacks shared by enemies. END*/
+
 gameAI.newEnemyCallback = function() {
     var newEnemy = new Enemy(this.getNextRow(),3,103,95,25);
     newEnemy.stepCountChangedCallback = stepCountChanged;
     newEnemy.xRightLimitReachedCallback = xRightLimitReached;
     return newEnemy;
 };
+
+/*
+* Call when enemy reaches the end.
+*/
 gameAI.updateEnemyCallback = function(enemy) {
     enemy.setRow(this.getNextRow());
     var currentScore = gameSetting.score;
@@ -728,31 +759,34 @@ gameAI.updateEnemyCallback = function(enemy) {
         enemy.setSpeed(170);
     }
     return enemy;
-}
+};
 
+/*
+* Handle keyboard input in main menu.
+*/
 function choosingCharacters(movement) {
     var totalNumOfPlayableChars = 4;
     switch(movement) {
         case 'right':
             characterChosen++;
-            if(characterChosen >= totalNumOfPlayableChars){
+            if(characterChosen >= totalNumOfPlayableChars) {
                 characterChosen = 0;
             }
             break;
         case 'left':
             characterChosen--;
-            if(characterChosen < 0){
+            if(characterChosen < 0) {
                 characterChosen = totalNumOfPlayableChars;
             }
             break;
         case 'enter':
-        if(characterChosen >= 4) {
-            characterChosen = 0;
-        }
-        else {
-            characterChosen++
-        }
-        switch(characterChosen){
+            if(characterChosen >= 4) {
+                characterChosen = 0;
+            }
+            else {
+                characterChosen++
+            }
+            switch(characterChosen) {
                 case 0:
                     player.sprite = 'images/char-boy.png';
                     break;
@@ -769,10 +803,10 @@ function choosingCharacters(movement) {
                     player.sprite = 'images/char-princess-girl.png';
                     break;
             }
+
         gameState = 1;//playing
         GameScreenDispatcher.trigger("player-info-render",gameSetting);
         player.reset();
-        //alert(characterChosen);
         break;
     }
 }

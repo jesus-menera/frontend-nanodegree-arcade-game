@@ -115,8 +115,8 @@ var Engine = (function(global) {
         }
     }
 
+    /* BEGIN Possible screens to render */
     function playing() {
-
         var rowImages = [
                 'images/water-block.png',   // Top row is water
                 'images/stone-block.png',   // Row 1 of 3 of stone
@@ -148,7 +148,7 @@ var Engine = (function(global) {
         renderEntities();
     }
 
-    /* BEGIN Possible screens to render */
+    //blacken screen.
     function screenOverlay() {
         ctx.globalAlpha = 0.5;
         ctx.beginPath();
@@ -157,15 +157,18 @@ var Engine = (function(global) {
         ctx.fill();
         ctx.globalAlpha = 1;
     }
+
     function clearScreen() {
         ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
     }
 
     function wonGame() {
+        screenOverlay();
         ctx.drawImage(Resources.get('images/YouWon.png'), 85,280);
     }
 
     function lostGame() {
+        screenOverlay();
         ctx.drawImage(Resources.get('images/YouLost.png'), 85,280);
     }
     function pausedGame(){
@@ -237,12 +240,10 @@ var Engine = (function(global) {
                 break;
             case 2://endGame
                 playing();
-                screenOverlay();
                 lostGame();
                 break;
             case 3://wonGame
                 playing();
-                screenOverlay();
                 wonGame();
                 break;
         }

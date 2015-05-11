@@ -46,7 +46,6 @@ $(function(){
 		}
  	});
 
-
 	var GameScreen = new GameScreenView();
 
 	/*Global var to handle game events.*/
