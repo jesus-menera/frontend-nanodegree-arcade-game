@@ -2,7 +2,7 @@
 /**
  *   Creates game setting object. Holds game session info.
  **/
-var GameSetting = function() {
+var GameSetting = function(playerRef) {
     this.score = 0;
     this.deltaScore = 0;
     this.lives = 3;
@@ -10,6 +10,10 @@ var GameSetting = function() {
 
     this.gemsAdded = 0;
     this.gameWon = false;
+
+    if(playerRef) {
+        this.playerRef = playerRef;
+    }
 };
 
 /** GAMEAI BEGIN **/
@@ -287,11 +291,14 @@ var Item = function(x, y, type, options) {
 /**
  * Draw item to screen.
  **/
-Item.prototype.render = function() {
-    switch (this.type) {
-        default: ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.scaleWidth, this.scaleHeight);
-        break;
+Item.prototype.render = function(screen,imageResources) {
+    if (screen && imageResources) {
+        switch (this.type) {
+            default: screen.drawImage(imageResources.get(this.sprite), this.x, this.y, this.scaleWidth, this.scaleHeight);
+            break;
+        }
     }
+
     //ctx.rect(this.x + this.xOffSet, this.y + this.yOffSet, this.width,this.height); //Use to get colliding values.
     //ctx.stroke();
 };
@@ -411,9 +418,9 @@ Enemy.prototype.setSpeed = function(speed) {
 };
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    if (this.x >= this.xLeftLimit || this.x <= this.xRightLimit) {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+Enemy.prototype.render = function(screen, imageResources) {
+    if (screen && imageResources && this.x >= this.xLeftLimit || this.x <= this.xRightLimit) {
+        screen.drawImage(imageResources.get(this.sprite), this.x, this.y);
         //ctx.rect(this.collisionHandler.x(), this.collisionHandler.y(), this.collisionHandler.width,this.collisionHandler.height);
         //ctx.stroke();
     }
@@ -442,17 +449,20 @@ var Player = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
 Player.prototype = Object.create(Collideable.prototype);
 Player.prototype.constructor = Player;
 
-Player.prototype.update = function(dt) {
+Player.prototype.update = function(dt, stateOfGame) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    if (this.y <= -15 && gameState === 1) { //-5 Canvas dependent Top Goal value.
+    if (stateOfGame && stateOfGame === 1 && this.y <= -15) { //-5 Canvas dependent Top Goal value.
         this.reachedGoalCallback();
     }
 };
 
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+Player.prototype.render = function(screen,imageResources) {
+    if(screen && imageResources) {
+        screen.drawImage(imageResources.get(this.sprite), this.x, this.y);
+    }
+
     /*ctx.beginPath();
     ctx.arc(this.x+50, this.y+103,36, 0, 2 * Math.PI, false);
     ctx.stroke();
@@ -576,7 +586,7 @@ player.changedPositionCallback = function() {
 var allEnemies = [];
 var allItems = [];
 
-var gameSetting = new GameSetting();
+var gameSetting = new GameSetting(player);
 
 /*
  *   Update player score, update player info display.
@@ -616,8 +626,8 @@ gameSetting.itemCollidedCallback = function(type, item) {
             break;
         case 'bug':
             this.lives = this.lives - 1;
-            if (this.lives > 0) {
-                player.reset();
+            if (this.playerRef && this.lives > 0) {
+                this.playerRef.reset();
             } else {
                 this.lostLevelCallback();
             }

@@ -111,7 +111,7 @@ var Engine = (function(global) {
             allEnemies.forEach(function(enemy) {
                 enemy.update(dt);
             });
-            player.update();
+            player.update(dt, this.gameState);
         }
     }
 
@@ -259,14 +259,14 @@ var Engine = (function(global) {
          */
 
         allEnemies.forEach(function(enemy) {
-            enemy.render();
+            enemy.render(this.ctx,Resources);
         });
 
         allItems.forEach(function(item) {
-            item.render();
+            item.render(this.ctx,Resources);
         });
 
-        player.render();
+        player.render(this.ctx,Resources);
     }
 
     /* This function does nothing but it could have been a good place to

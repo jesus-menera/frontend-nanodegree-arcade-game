@@ -20,3 +20,4 @@ for self-checking their submission.
 	1.Add new game functionality.
 	2.Add leaderboard page.
 	3.Intergrate firebase to save leaderboard.
+	4.Refractor Collition Detection.
