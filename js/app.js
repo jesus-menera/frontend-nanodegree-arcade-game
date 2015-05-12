@@ -1,6 +1,7 @@
+
 /**
-*   Creates game setting object. Holds game session info.
-**/
+ *   Creates game setting object. Holds game session info.
+ **/
 var GameSetting = function() {
     this.score = 0;
     this.deltaScore = 0;
@@ -14,18 +15,18 @@ var GameSetting = function() {
 /** GAMEAI BEGIN **/
 
 /**
-*   Creates instance of game artificial intelligence. Takes care of enemy creation.
-*   @ param enemyArray: reference to array that holds all active game enemies.
-*   @ param setting:    reference to game setting object, used to store and check game state.
-**/
-var GameAI = function(enemyArray, itemArray,settings) {
+ *   Creates instance of game artificial intelligence. Takes care of enemy creation.
+ *   @ param enemyArray: reference to array that holds all active game enemies.
+ *   @ param setting:    reference to game setting object, used to store and check game state.
+ **/
+var GameAI = function(enemyArray, itemArray, settings) {
     if (enemyArray === undefined) {
         enemyArray = [];
     }
     if (itemArray === undefined) {
         itemArray = [];
     }
-    if(settings === undefined) {
+    if (settings === undefined) {
         settings = {};
     }
 
@@ -43,24 +44,24 @@ var GameAI = function(enemyArray, itemArray,settings) {
     this.numberOfCreatedEnemies = 0;
 };
 /**
-*   Function called in game loop to update GameAI in each game step.
-*   @param dt:  time constant.
-**/
+ *   Function called in game loop to update GameAI in each game step.
+ *   @param dt:  time constant.
+ **/
 GameAI.prototype.update = function(dt) {
     //if there's no enemies on screen, add one.
-    if(this.activeEnemyArray.length === 0) {
-       this.activeEnemyArray.push(this.newEnemyCallback());
+    if (this.activeEnemyArray.length === 0) {
+        this.activeEnemyArray.push(this.newEnemyCallback());
     }
 };
 
 /**
-*   Returns numerical row value, in which to create next enemy.
-*   @returns Numercal value in set{012}.
-**/
+ *   Returns numerical row value, in which to create next enemy.
+ *   @returns Numercal value in set{012}.
+ **/
 GameAI.prototype.getNextRow = function() {
     var temp = this.prevRowCalled;
     this.prevRowCalled++;
-    if(this.prevRowCalled > 2) {
+    if (this.prevRowCalled > 2) {
         this.prevRowCalled = 0;
     }
     return temp;
@@ -81,20 +82,20 @@ GameAI.prototype.addNewEnemyCallback = function(row) {
         this.activeEnemyArray.push(this.updateEnemyCallback(topEnemy));
     }
     //Create new enemy if allowed by game constraint
-    else if ( this.numberOfCreatedEnemies < this.numberOfAllowedEnemies - 1) {
+    else if (this.numberOfCreatedEnemies < this.numberOfAllowedEnemies - 1) {
         this.activeEnemyArray.push(this.newEnemyCallback());
         this.numberOfCreatedEnemies++;
     }
 };
 
 /**
-*   Stores enemy for reuse.
-*   @param enemy: instances of enemy to retire.
-**/
-GameAI.prototype.resetEnemyCallback = function(enemy){
+ *   Stores enemy for reuse.
+ *   @param enemy: instances of enemy to retire.
+ **/
+GameAI.prototype.resetEnemyCallback = function(enemy) {
     if (enemy !== undefined) {
         var indexOfEnemy = this.activeEnemyArray.indexOf(enemy);
-        this.activeEnemyArray.splice(indexOfEnemy,1);
+        this.activeEnemyArray.splice(indexOfEnemy, 1);
         this.inactiveEnemyArray.push(enemy);
     }
 };
@@ -108,10 +109,10 @@ GameAI.prototype.resetEnemyCallback = function(enemy){
 GameAI.prototype.newEnemyCallback = undefined;
 
 /**
-*   Callback which updates given enemy with new constraits according to game state.
-*   For example: increase speed.
-*   @param enemy: reference of enemy to update.
-**/
+ *   Callback which updates given enemy with new constraits according to game state.
+ *   For example: increase speed.
+ *   @param enemy: reference of enemy to update.
+ **/
 GameAI.prototype.updateEnemyCallback = undefined;
 
 /** GAMEAI END **/
@@ -127,19 +128,19 @@ GameAI.prototype.updateEnemyCallback = undefined;
 **/
 var Collideable = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
 
-/**
-*   Object Box
-*   (x,y)
-*   +-------------+
-*   |             |
-*   |             |
-*   +=============|
-*   |(x,y)Offsets |
-*   |             -paramHeight
-*   |             |
-*   +------|------+
-*      paraWeight
-**/
+    /**
+     *   Object Box
+     *   (x,y)
+     *   +-------------+
+     *   |             |
+     *   |             |
+     *   +=============|
+     *   |(x,y)Offsets |
+     *   |             -paramHeight
+     *   |             |
+     *   +------|------+
+     *      paraWeight
+     **/
     this.x = 0;
     this.y = 0;
     this.xOffSet = paramXOffSet;
@@ -154,17 +155,17 @@ var Collideable = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight) 
     @returns true, objects have collided, false if not, undefined if not possible to compute.
 **/
 Collideable.prototype.haveCollidedWith = function(collideableObj) {
-/*
-*    DeltaX
-*   |    |
-*   +----|--+ --------
-*   |    |  |         DeltaY
-*   |    +--+------+ -
-*   |    |  |      |
-*   +----+--+      |
-*        |         |
-*        +---------+
-*/
+    /*
+     *    DeltaX
+     *   |    |
+     *   +----|--+ --------
+     *   |    |  |         DeltaY
+     *   |    +--+------+ -
+     *   |    |  |      |
+     *   +----+--+      |
+     *        |         |
+     *        +---------+
+     */
     if (collideableObj !== undefined) {
         var x0 = this.x + this.xOffSet;
         var y0 = this.y + this.yOffSet;
@@ -174,16 +175,14 @@ Collideable.prototype.haveCollidedWith = function(collideableObj) {
         var deltaY;
         if (this.y > collideableObj.y) {
             deltaY = y0 - y1 - collideableObj.height;
-        }
-        else {
+        } else {
             deltaY = y1 - y0 - this.height;
         }
         if (deltaY <= 0) {
             var deltaX;
             if (x0 > x1) {
                 deltaX = x0 - x1 - collideableObj.width;
-            }
-            else {
+            } else {
                 deltaX = x1 - x0 - this.width;
             }
             if (deltaX <= 0) {
@@ -199,19 +198,19 @@ Collideable.prototype.haveCollidedWith = function(collideableObj) {
 
 /** ITEM BEGIN **/
 /**
-* Base class for collectable items, subclass of Collieable
-**/
-var Item = function(x,y,type,options) {
-    if(options === undefined) {
-        options ={};
+ * Base class for collectable items, subclass of Collieable
+ **/
+var Item = function(x, y, type, options) {
+    if (options === undefined) {
+        options = {};
     }
     //if (options.scaleWidth !== undefined && options.scaleHeight !== undefined) {
-     //   this.scaleHeight = options.scaleHeight;
-       // this.scaleWidth = options.scaleWidth;
+    //   this.scaleHeight = options.scaleHeight;
+    // this.scaleWidth = options.scaleWidth;
     //}
-    switch(type) {
+    switch (type) {
         case 'gem':
-            switch(options.color) {
+            switch (options.color) {
                 case 'blue':
                     this.sprite = 'images/Gem-Blue.png';
                     this.value = 10;
@@ -229,9 +228,9 @@ var Item = function(x,y,type,options) {
                     this.value = 10;
                     break;
             }
-            Collideable.call(this, 3,50,60,45);
-            this.x=x;
-            this.y=y;
+            Collideable.call(this, 3, 50, 60, 45);
+            this.x = x;
+            this.y = y;
             this.type = 'gem';
             if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
                 this.scaleHeight = 100;
@@ -239,9 +238,9 @@ var Item = function(x,y,type,options) {
             }
             break;
         case 'heart':
-            Collideable.call(this, 5,50,55,25);
-            this.x=x;
-            this.y=y;
+            Collideable.call(this, 5, 50, 55, 25);
+            this.x = x;
+            this.y = y;
             this.type = 'heart';
             this.sprite = 'images/Heart.png';
             if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
@@ -250,9 +249,9 @@ var Item = function(x,y,type,options) {
             }
             break;
         case 'key':
-            Collideable.call(this, 20,75,27,28);
-            this.x=x;
-            this.y=y;
+            Collideable.call(this, 20, 75, 27, 28);
+            this.x = x;
+            this.y = y;
             this.type = 'key';
             this.sprite = 'images/Key.png';
             if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
@@ -261,9 +260,9 @@ var Item = function(x,y,type,options) {
             }
             break;
         case 'star':
-            Collideable.call(this, 15,45,50,52);
-            this.x=x;
-            this.y=y;
+            Collideable.call(this, 15, 45, 50, 52);
+            this.x = x;
+            this.y = y;
             this.type = 'star';
             this.sprite = 'images/Star.png';
             if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
@@ -272,9 +271,9 @@ var Item = function(x,y,type,options) {
             }
             break;
         case 'rock':
-            Collideable.call(this, 15,50,55,52);
-            this.x=x;
-            this.y=y;
+            Collideable.call(this, 15, 50, 55, 52);
+            this.x = x;
+            this.y = y;
             this.type = 'rock';
             this.sprite = 'images/Rock.png';
             if (options.scaleWidth === undefined && options.scaleHeight === undefined) {
@@ -286,13 +285,12 @@ var Item = function(x,y,type,options) {
 };
 
 /**
-* Draw item to screen.
-**/
+ * Draw item to screen.
+ **/
 Item.prototype.render = function() {
-    switch(this.type) {
-        default:
-            ctx.drawImage(Resources.get(this.sprite), this.x, this.y,this.scaleWidth,this.scaleHeight);
-            break;
+    switch (this.type) {
+        default: ctx.drawImage(Resources.get(this.sprite), this.x, this.y, this.scaleWidth, this.scaleHeight);
+        break;
     }
     //ctx.rect(this.x + this.xOffSet, this.y + this.yOffSet, this.width,this.height); //Use to get colliding values.
     //ctx.stroke();
@@ -303,29 +301,29 @@ Item.prototype.render = function() {
 /** ENEMY BEGIN **/
 
 /**
-*   Creates instance of Enemy. Keeps track of speed, steps taken, displaying to screen.
-*   @param row.
-**/
+ *   Creates instance of Enemy. Keeps track of speed, steps taken, displaying to screen.
+ *   @param row.
+ **/
 var Enemy = function(row, paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
     Collideable.call(this, paramXOffSet, paramYOffSet, paramWidth, paramHeight);
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
-    if(row === undefined) {
+    if (row === undefined) {
         row = 0;
     }
 
     this.stepCount = 0;
     this.stepDeltaX = 100; //Brodcast self info every DeltaX step.
     this.stepSpeed = 100;
-    this.row = -1;  //Numerical value of row in which to walk.
+    this.row = -1; //Numerical value of row in which to walk.
 
     //Following numbers depend on canvas size. Figure out new numbers if canvas size is changed.
     this.xLeftLimit = -98; //left and right most x limits on screen
     this.xRightLimit = 505;
     this.x = this.xLeftLimit;
 
-    switch(row) {
+    switch (row) {
         case 0:
             this.y = 60;
             this.row = 0;
@@ -358,15 +356,14 @@ Enemy.prototype.update = function(dt) {
     // all computers.
     if (this.x >= this.xRightLimit) {
         this.x = this.xLeftLimit; //go back to the beginning when end of row is reached.
-    }
-    else{
+    } else {
         this.x = this.x + (this.stepSpeed * dt); //with increase of game difficulty, increase enemy speed.
     }
 
     //Set up enemy broadcast when certain conditions are met.
     this.stepCount++;
-    if(this.stepCount >= this.stepDeltaX) {
-        this.stepCount=0;
+    if (this.stepCount >= this.stepDeltaX) {
+        this.stepCount = 0;
         this.stepCountChangedCallback(this);
     }
     if (this.x >= this.xRightLimit) {
@@ -375,15 +372,15 @@ Enemy.prototype.update = function(dt) {
 };
 
 /**
-*   Setter function to set enemy row variable.
-*   @param row.
-**/
+ *   Setter function to set enemy row variable.
+ *   @param row.
+ **/
 Enemy.prototype.setRow = function(row) {
-    if(row === undefined) {
+    if (row === undefined) {
         row = 0;
     }
     /* Following row values are dependent on canvas size.*/
-    switch(row){
+    switch (row) {
         case 0:
             this.y = 60;
             this.row = 0;
@@ -403,11 +400,11 @@ Enemy.prototype.setRow = function(row) {
 };
 
 /**
-*   Setter function to set enemy row speed.
-*   @param speed.
-**/
+ *   Setter function to set enemy row speed.
+ *   @param speed.
+ **/
 Enemy.prototype.setSpeed = function(speed) {
-    if(speed === undefined) {
+    if (speed === undefined) {
         speed = 100;
     }
     this.stepSpeed = speed;
@@ -431,9 +428,9 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 
 /**
-*   Creates instance of Player.
-**/
-var Player = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight){
+ *   Creates instance of Player.
+ **/
+var Player = function(paramXOffSet, paramYOffSet, paramWidth, paramHeight) {
     Collideable.call(this, paramXOffSet, paramYOffSet, paramWidth, paramHeight);
     //this.sprite = 'images/char-boy.png';
     this.x = 200;
@@ -449,7 +446,7 @@ Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    if(this.y <= -15 && gameState === 1) { //-5 Canvas dependent Top Goal value.
+    if (this.y <= -15 && gameState === 1) { //-5 Canvas dependent Top Goal value.
         this.reachedGoalCallback();
     }
 };
@@ -467,9 +464,9 @@ Player.prototype.render = function() {
 };
 
 /*
-*   Sets player back to starting point.
-*   @params none.
-*/
+ *   Sets player back to starting point.
+ *   @params none.
+ */
 Player.prototype.reset = function() {
     //Values dependent on canvas size.
     this.x = 200;
@@ -477,69 +474,64 @@ Player.prototype.reset = function() {
 };
 
 /*
-*   Handles Player movement.
-*   @param: movement
-*/
+ *   Handles Player movement.
+ *   @param: movement
+ */
 Player.prototype.handleInput = function(movement) {
     //Player movement distance will be determined by stepPowerUp variable.
     //var TAKE_WHOLE_STEP = 30 + (10*this.stepPowerUp); //60 limit
     var horizontalStep = 100;
     var verticalStep = 80;
-/*
-   screen
-             upperYLimit
-             ----------
-            |          |
-lowerXLimit |          | upperXLimit
-            |          |
-            |          |
-             ----------
-             lowerYLimit
-*/
+    /*
+       screen
+                 upperYLimit
+                 ----------
+                |          |
+    lowerXLimit |          | upperXLimit
+                |          |
+                |          |
+                 ----------
+                 lowerYLimit
+    */
 
     var upperYLimit = -15;
     var lowerYLimit = 360;
     var lowerXlimit = -10;
     var upperXLimit = 412;
 
-    switch(movement){
+    switch (movement) {
         case 'left':
-            if( this.x - horizontalStep >= lowerXlimit) {
+            if (this.x - horizontalStep >= lowerXlimit) {
                 this.x -= horizontalStep;
-            }
-            else {
+            } else {
                 this.x = lowerXlimit;
             }
             break;
         case 'up':
-            if( this.y - verticalStep >= upperYLimit) {
+            if (this.y - verticalStep >= upperYLimit) {
                 this.y -= verticalStep;
-            }
-            else {
+            } else {
                 this.y = upperYLimit;
             }
             break;
         case 'right':
-            if( this.x + horizontalStep <= upperXLimit) {
+            if (this.x + horizontalStep <= upperXLimit) {
                 this.x += horizontalStep;
-            }
-            else {
+            } else {
                 this.x = upperXLimit;
             }
             break;
         case 'down':
-            if( this.y + verticalStep <= lowerYLimit) {
+            if (this.y + verticalStep <= lowerYLimit) {
                 this.y += verticalStep;
-            }
-            else {
+            } else {
                 this.y = lowerYLimit;
             }
             break;
         case 'space':
-            if(gamePaused === true) {
+            if (gamePaused === true) {
                 gamePaused = false;
-            }
-            else {
+            } else {
                 gamePaused = true;
             }
             break;
@@ -551,34 +543,32 @@ lowerXLimit |          | upperXLimit
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var player = new Player(30,113,44,27);
+var player = new Player(30, 113, 44, 27);
 
 /*
-*   Call to handle player reaching goal: water.
-*/
+ *   Call to handle player reaching goal: water.
+ */
 player.reachedGoalCallback = function() {
     gameSetting.addToScore(10);
     var tempGameScore = gameSetting.getScore();
 
-    if(tempGameScore >= 40 && tempGameScore <80) {
+    if (tempGameScore >= 40 && tempGameScore < 80) {
         this.stepPowerUp = 1;
         gameAI.numberOfAllowedEnemies = 4;
-    }
-    else if (tempGameScore >= 80 && tempGameScore <120) {
+    } else if (tempGameScore >= 80 && tempGameScore < 120) {
         this.stepPowerUp = 2;
         gameAI.numberOfAllowedEnemies = 5;
-    }
-    else if (tempGameScore >= 120) {
+    } else if (tempGameScore >= 120) {
         this.stepPowerUp = 3;
         gameAI.numberOfAllowedEnemies = 6;
     }
 
-    this.reset();//place player back to origin
+    this.reset(); //place player back to origin
 };
 
 /*
-*   Todo: will use this callback to update gameSetting player position.
-*/
+ *   Todo: will use this callback to update gameSetting player position.
+ */
 player.changedPositionCallback = function() {
     gameSetting.playerXpos = this.x;
 };
@@ -589,8 +579,8 @@ var allItems = [];
 var gameSetting = new GameSetting();
 
 /*
-*   Update player score, update player info display.
-*/
+ *   Update player score, update player info display.
+ */
 gameSetting.addToScore = function(inc) {
     this.score += inc;
     this.deltaScore += inc;
@@ -601,7 +591,7 @@ gameSetting.addToScore = function(inc) {
     this.addNewItemCallback(); //decided if player deserves a new item or not.
 
     //update player info display
-    GameScreenDispatcher.trigger('player-info-render',gameSetting);
+    GameScreenDispatcher.trigger('player-info-render', gameSetting);
 };
 
 gameSetting.getScore = function() {
@@ -609,27 +599,26 @@ gameSetting.getScore = function() {
 };
 
 /*
-* Call when player has reached a winning score, and render key item.
-*/
+ * Call when player has reached a winning score, and render key item.
+ */
 gameSetting.getnextLevelTokenCallback = function() {
-    allItems.push(new Item(350,90,'key'));
+    allItems.push(new Item(350, 90, 'key'));
 };
 
 /*
-* When player collides with an item, decided what todo based on item.
-*/
-gameSetting.itemCollidedCallback = function(type,item) {
+ * When player collides with an item, decided what todo based on item.
+ */
+gameSetting.itemCollidedCallback = function(type, item) {
     var removeItem = true;
-    switch(type) {
+    switch (type) {
         case 'key': //make the key appear to pass level.
             this.wonLevelCallback();
             break;
         case 'bug':
             this.lives = this.lives - 1;
-            if(this.lives > 0) {
+            if (this.lives > 0) {
                 player.reset();
-            }
-            else {
+            } else {
                 this.lostLevelCallback();
             }
             removeItem = false;
@@ -639,7 +628,7 @@ gameSetting.itemCollidedCallback = function(type,item) {
             this.deltaScore = 0;
             break;
         case 'gem':
-            if(item !== undefined) {
+            if (item !== undefined) {
                 this.score += item.value;
                 this.deltaScore = 0;
             }
@@ -649,12 +638,12 @@ gameSetting.itemCollidedCallback = function(type,item) {
     //remove item from allItems array.
     if (removeItem) {
         var indexOfItem = allItems.indexOf(item);
-        allItems.splice(indexOfItem,1);
+        allItems.splice(indexOfItem, 1);
         this.gemsAdded--;
     }
 
     //Player score or hearts may have affected, update player info display.
-    GameScreenDispatcher.trigger('player-info-render',gameSetting);
+    GameScreenDispatcher.trigger('player-info-render', gameSetting);
 };
 
 //Todo: come up with a descriptive object to hold gameState codes: {'playing', 'choosing','wonGame', 'lostGame'}.
@@ -663,60 +652,63 @@ gameSetting.wonLevelCallback = function() {
     gameState = 3;
 };
 
-gameSetting.lostLevelCallback = function() {gamePaused = true;
+gameSetting.lostLevelCallback = function() {
+    gamePaused = true;
     gamePaused = true;
     gameState = 2;
 };
 
 gameSetting.addNewItemCallback = function() {
     //random range: random() * (max-min) + min
-    var randX = Math.random() * (380) + 10;// values between 10 390
+    var randX = Math.random() * (380) + 10; // values between 10 390
     var randY = Math.random() * (200) + 60; //values betwwen 60 , 260
 
     var randMax = 2;
 
-    var  item;
-    if(this.deltaScore >= 40 && this.deltaScore <= 70 && this.gemsAdded === 0) {
-        if(this.score >= 40 && this.score < 79) {
+    var item;
+    if (this.deltaScore >= 40 && this.deltaScore <= 70 && this.gemsAdded === 0) {
+        if (this.score >= 40 && this.score < 79) {
             randMax = 2;
-        }
-        else if (this.score >= 80 && this.score < 99) {
+        } else if (this.score >= 80 && this.score < 99) {
             randMax = 3;
-        }
-        else if (this.score >= 100){
+        } else if (this.score >= 100) {
             randMax = 4;
         }
         randMax = Math.round(Math.random() * randMax);
-        switch(randMax) {
+        switch (randMax) {
             case 1:
-                item = new Item(randX,randY,'gem',{color:'blue'});
+                item = new Item(randX, randY, 'gem', {
+                    color: 'blue'
+                });
                 this.gemsAdded++;
                 break;
             case 2:
-                item = new Item(randX,randY,'gem',{color:'green'});
+                item = new Item(randX, randY, 'gem', {
+                    color: 'green'
+                });
                 this.gemsAdded++;
                 break;
             case 3:
-                item = new Item(randX,randY,'gem',{color:'orange'});
+                item = new Item(randX, randY, 'gem', {
+                    color: 'orange'
+                });
                 this.gemsAdded++;
                 break;
         }
-    }
-    else if (this.deltaScore > 70) {
-        if(this.lives < 3) {
-            item = new Item(randX,randY,'heart');
-        }
-        else {
-            item = new Item(randX,randY,'star');
+    } else if (this.deltaScore > 70) {
+        if (this.lives < 3) {
+            item = new Item(randX, randY, 'heart');
+        } else {
+            item = new Item(randX, randY, 'star');
         }
     }
 
-    if(item) {
+    if (item) {
         allItems.push(item);
     }
 };
 
-var gameAI = new GameAI(allEnemies,allItems, gameSetting);
+var gameAI = new GameAI(allEnemies, allItems, gameSetting);
 
 /* Enemy instance callbacks shared by enemies. BEGIN*/
 function stepCountChanged(me) {
@@ -724,69 +716,63 @@ function stepCountChanged(me) {
         gameAI.addNewEnemyCallback(me.row);
     }
 }
+
 function xRightLimitReached(me) {
-    gameAI.resetEnemyCallback(me);
-}
-/* Enemy instance callbacks shared by enemies. END*/
+        gameAI.resetEnemyCallback(me);
+    }
+    /* Enemy instance callbacks shared by enemies. END*/
 
 gameAI.newEnemyCallback = function() {
-    var newEnemy = new Enemy(this.getNextRow(),3,103,95,25);
+    var newEnemy = new Enemy(this.getNextRow(), 3, 103, 95, 25);
     newEnemy.stepCountChangedCallback = stepCountChanged;
     newEnemy.xRightLimitReachedCallback = xRightLimitReached;
     return newEnemy;
 };
 
 /*
-* Call when enemy reaches the end.
-*/
+ * Call when enemy reaches the end.
+ */
 gameAI.updateEnemyCallback = function(enemy) {
     enemy.setRow(this.getNextRow());
     var currentScore = gameSetting.score;
 
-    if(currentScore >= 0 && currentScore < 40) {
+    if (currentScore >= 0 && currentScore < 40) {
         enemy.setSpeed(100);
-    }
-
-    else if (currentScore >= 40 && currentScore < 80) {
+    } else if (currentScore >= 40 && currentScore < 80) {
         enemy.setSpeed(130);
-    }
-
-    else if (currentScore >= 80 && currentScore < 120) {
+    } else if (currentScore >= 80 && currentScore < 120) {
         enemy.setSpeed(150);
-    }
-
-    else if (currentScore >= 120) {
+    } else if (currentScore >= 120) {
         enemy.setSpeed(170);
     }
     return enemy;
 };
 
 /*
-* Handle keyboard input in main menu.
-*/
+ * Handle keyboard input in main menu.
+ */
 function choosingCharacters(movement) {
     var totalNumOfPlayableChars = 4;
-    switch(movement) {
+    switch (movement) {
         case 'right':
             characterChosen++;
-            if(characterChosen >= totalNumOfPlayableChars) {
+            if (characterChosen >= totalNumOfPlayableChars) {
                 characterChosen = 0;
             }
             break;
         case 'left':
             characterChosen--;
-            if(characterChosen < 0) {
+            if (characterChosen < 0) {
                 characterChosen = totalNumOfPlayableChars;
             }
             break;
         case 'enter':
-            if(characterChosen >= 4) {
+            if (characterChosen >= 4) {
                 characterChosen = 0;
-            }
-            else {
+            } else {
                 characterChosen++;
             }
-            switch(characterChosen) {
+            switch (characterChosen) {
                 case 0:
                     player.sprite = 'images/char-boy.png';
                     break;
@@ -804,10 +790,10 @@ function choosingCharacters(movement) {
                     break;
             }
 
-        gameState = 1;//playing
-        GameScreenDispatcher.trigger('player-info-render',gameSetting);
-        player.reset();
-        break;
+            gameState = 1; //playing
+            GameScreenDispatcher.trigger('player-info-render', gameSetting);
+            player.reset();
+            break;
     }
 }
 
@@ -823,11 +809,10 @@ document.addEventListener('keyup', function(e) {
         32: 'space'
     };
 
-    if((e.keyCode >=37 && e.keyCode <=40) || e.keyCode===13 || e.keyCode ===32){
-       if(gameState===1 ) {
+    if ((e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode === 13 || e.keyCode === 32) {
+        if (gameState === 1) {
             player.handleInput(allowedKeys[e.keyCode]);
-        }
-        else if(gameState===0) {
+        } else if (gameState === 0) {
             choosingCharacters(allowedKeys[e.keyCode]);
         }
     }
