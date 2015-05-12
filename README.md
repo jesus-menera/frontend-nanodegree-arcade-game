@@ -7,15 +7,15 @@ for self-checking their submission.
 
 *** Frogger app deployed to: https://jmenera-frogger.firebaseapp.com/
 
-HOW-TO-PLAY:
-	Character Select Screen:
-		Use 'LEFT' and 'RIGHT' arrow keys to scan through available characters.
-		Press 'ENTER' to make your choice.
-	Game Controls:
-		Press 'SPACE' to pause game.
-		Use arroy keys to move character UP/DOWN, LEFT/RIGHT, respectively.
+#HOW-TO-PLAY:
+	##Character Select Screen:
+		0.Use 'LEFT' and 'RIGHT' arrow keys to scan through available characters.
+		1.Press 'ENTER' to make your choice.
+	##Game Controls:
+		0.Press 'SPACE' to pause game.
+		1.Use arroy keys to move character UP/DOWN, LEFT/RIGHT, respectively.
 
-TODO:
+#TODO:
 	0.Make game controls user friendly. Poosible: game instruction page/modal.
 	1.Add new game functionality.
 	2.Add leaderboard page.
