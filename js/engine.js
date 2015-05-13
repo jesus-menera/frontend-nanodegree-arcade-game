@@ -107,7 +107,7 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        if (this.gamePaused === false) {
+        if (gameSetting.getGamePaused() === false) {
             allEnemies.forEach(function(enemy) {
                 enemy.update(dt);
             });
@@ -178,14 +178,14 @@ var Engine = (function(global) {
     }
 
     function choosing() {
-        var t = this.characterChosen;
+        var t = gameSetting.getCharacterChosen();
         var x_pos = 100;
         var y_pos = 230;
         ctx.drawImage(Resources.get('images/Frogger.png'), 85,120);
         ctx.drawImage(Resources.get('images/Selector.png'), 200, y_pos);
         ctx.drawImage(Resources.get('images/Character-Select.png'),150,430);
         ctx.drawImage(Resources.get('images/leftIndicator.png'), 75,330);
-         ctx.drawImage(Resources.get('images/rightIndicator.png'), 400,330);
+        ctx.drawImage(Resources.get('images/rightIndicator.png'), 400,330);
 
         var count = 0;
         while(count < 3) {
@@ -231,7 +231,7 @@ var Engine = (function(global) {
         switch(this.gameState) {
             case 1://playing
                 playing();
-                if(this.gamePaused){
+                if(gameSetting.getGamePaused()){
                     pausedGame();
                 }
                 break;
@@ -315,6 +315,5 @@ var Engine = (function(global) {
      */
     global.ctx = ctx;
     global.gameState = gameState;
-    global.characterChosen = characterChosen;
     global.gamePaused = gamePaused;
 })(this);

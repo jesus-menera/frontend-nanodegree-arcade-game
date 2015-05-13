@@ -14,6 +14,9 @@ var GameSetting = function(playerRef) {
     if(playerRef) {
         this.playerRef = playerRef;
     }
+    this.characterChosen = 0;
+    this.gamePaused = false;
+    //this.gameState = 0; //0:choosing,1:playing
 };
 
 /** GAMEAI BEGIN **/
@@ -539,10 +542,10 @@ Player.prototype.handleInput = function(movement) {
             }
             break;
         case 'space':
-            if (gamePaused === true) {
-                gamePaused = false;
+            if (gameSetting.getGamePaused() === true) {
+                gameSetting.setGamePaused(false);
             } else {
-                gamePaused = true;
+                gameSetting.setGamePaused(true);
             }
             break;
     }
@@ -608,6 +611,29 @@ gameSetting.getScore = function() {
     return this.score;
 };
 
+gameSetting.getCharacterChosen = function() {
+    return this.characterChosen;
+};
+
+gameSetting.setCharacterChosen = function(character) {
+    if (character!==undefined) { //Must compare to undefined, since 0 is a possible value
+        this.characterChosen = character;
+    }
+};
+
+//gamePaused = false,
+//gameState = 0; //0:choosing,1:playing
+
+gameSetting.getGamePaused = function() {
+    return this.gamePaused;
+};
+
+gameSetting.setGamePaused = function(paused) {
+    if(paused !== undefined) {
+        this.gamePaused = paused;
+    }
+};
+
 /*
  * Call when player has reached a winning score, and render key item.
  */
@@ -658,13 +684,12 @@ gameSetting.itemCollidedCallback = function(type, item) {
 
 //Todo: come up with a descriptive object to hold gameState codes: {'playing', 'choosing','wonGame', 'lostGame'}.
 gameSetting.wonLevelCallback = function() {
-    gamePaused = true;
+    this.gamePaused = true;
     gameState = 3;
 };
 
 gameSetting.lostLevelCallback = function() {
-    gamePaused = true;
-    gamePaused = true;
+    this.gamePaused = true;
     gameState = 2;
 };
 
@@ -758,31 +783,34 @@ gameAI.updateEnemyCallback = function(enemy) {
     return enemy;
 };
 
+
+
 /*
  * Handle keyboard input in main menu.
  */
 function choosingCharacters(movement) {
     var totalNumOfPlayableChars = 4;
+    var character = gameSetting.getCharacterChosen();
     switch (movement) {
         case 'right':
-            characterChosen++;
-            if (characterChosen >= totalNumOfPlayableChars) {
-                characterChosen = 0;
+            character++;
+            if (character >= totalNumOfPlayableChars) {
+                character = 0;
             }
             break;
         case 'left':
-            characterChosen--;
-            if (characterChosen < 0) {
-                characterChosen = totalNumOfPlayableChars;
+            character--;
+            if (character < 0) {
+                character = totalNumOfPlayableChars;
             }
             break;
         case 'enter':
-            if (characterChosen >= 4) {
-                characterChosen = 0;
+            if (character >= 4) {
+                character = 0;
             } else {
-                characterChosen++;
+                character++;
             }
-            switch (characterChosen) {
+            switch (character) {
                 case 0:
                     player.sprite = 'images/char-boy.png';
                     break;
@@ -805,6 +833,7 @@ function choosingCharacters(movement) {
             player.reset();
             break;
     }
+    gameSetting.setCharacterChosen(character);
 }
 
 // This listens for key presses and sends the keys to your
