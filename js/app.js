@@ -497,8 +497,8 @@ Player.prototype.reset = function() {
 Player.prototype.handleInput = function(movement) {
     //Player movement distance will be determined by stepPowerUp variable.
     //var TAKE_WHOLE_STEP = 30 + (10*this.stepPowerUp); //60 limit
-    var horizontalStep = 100;
-    var verticalStep = 80;
+    var horizontalStep = 101; //Previous value given: 100
+    var verticalStep = 83; //Previous value given: 80
     /*
        screen
                  upperYLimit
