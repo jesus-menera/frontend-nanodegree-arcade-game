@@ -11,7 +11,7 @@ var GameSetting = function(playerRef) {
     this.gemsAdded = 0;
     this.gameWon = false;
 
-    if(playerRef) {
+    if (playerRef) {
         this.playerRef = playerRef;
     }
 
@@ -298,7 +298,7 @@ var Item = function(x, y, type, options) {
 /**
  * Draw item to screen.
  **/
-Item.prototype.render = function(screen,imageResources) {
+Item.prototype.render = function(screen, imageResources) {
     if (screen && imageResources) {
         switch (this.type) {
             default: screen.drawImage(imageResources.get(this.sprite), this.x, this.y, this.scaleWidth, this.scaleHeight);
@@ -465,8 +465,8 @@ Player.prototype.update = function(dt, stateOfGame) {
     }
 };
 
-Player.prototype.render = function(screen,imageResources) {
-    if(screen && imageResources) {
+Player.prototype.render = function(screen, imageResources) {
+    if (screen && imageResources) {
         screen.drawImage(imageResources.get(this.sprite), this.x, this.y);
     }
 
@@ -611,12 +611,19 @@ gameSetting.addToScore = function(inc) {
     gameSetting.gameInfoDisplayUpdate();
 };
 
+/*
+ * Callback to display game Info. Calls global var.
+ */
 gameSetting.gameInfoDisplayUpdate = function() {
     if (!this.gameInfoDisplay) {
         this.gameInfoDisplay = window.GameScreenDispatcher;
     }
     this.gameInfoDisplay.trigger('player-info-render', gameSetting);
 };
+
+/*
+ * BEGIN getters/setters
+ */
 
 gameSetting.getScore = function() {
     return this.score;
@@ -627,20 +634,17 @@ gameSetting.getCharacterChosen = function() {
 };
 
 gameSetting.setCharacterChosen = function(character) {
-    if (character!==undefined) { //Must compare to undefined, since 0 is a possible value
+    if (character !== undefined) { //Must compare to undefined, since 0 is a possible value
         this.characterChosen = character;
     }
 };
-
-//gamePaused = false,
-//gameState = 0; //0:choosing,1:playing
 
 gameSetting.getGamePaused = function() {
     return this.gamePaused;
 };
 
 gameSetting.setGamePaused = function(paused) {
-    if(paused !== undefined) {
+    if (paused !== undefined) {
         this.gamePaused = paused;
     }
 };
@@ -650,10 +654,14 @@ gameSetting.getGameState = function() {
 };
 
 gameSetting.setGameState = function(state) {
-    if(state !== undefined) {
+    if (state !== undefined) {
         this.gameState = state;
     }
 };
+
+/*
+ * END getters/setters
+ */
 
 /*
  * Call when player has reached a winning score, and render key item.
