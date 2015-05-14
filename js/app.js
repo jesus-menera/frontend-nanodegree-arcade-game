@@ -14,9 +14,13 @@ var GameSetting = function(playerRef) {
     if(playerRef) {
         this.playerRef = playerRef;
     }
+
     this.characterChosen = 0;
     this.gamePaused = false;
-    //this.gameState = 0; //0:choosing,1:playing
+    this.gameState = 0; //0:choosing,1:playing
+
+    this.gameInfoDisplay = false;
+
 };
 
 /** GAMEAI BEGIN **/
@@ -604,7 +608,14 @@ gameSetting.addToScore = function(inc) {
     this.addNewItemCallback(); //decided if player deserves a new item or not.
 
     //update player info display
-    GameScreenDispatcher.trigger('player-info-render', gameSetting);
+    gameSetting.gameInfoDisplayUpdate();
+};
+
+gameSetting.gameInfoDisplayUpdate = function() {
+    if (!this.gameInfoDisplay) {
+        this.gameInfoDisplay = window.GameScreenDispatcher;
+    }
+    this.gameInfoDisplay.trigger('player-info-render', gameSetting);
 };
 
 gameSetting.getScore = function() {
@@ -631,6 +642,16 @@ gameSetting.getGamePaused = function() {
 gameSetting.setGamePaused = function(paused) {
     if(paused !== undefined) {
         this.gamePaused = paused;
+    }
+};
+
+gameSetting.getGameState = function() {
+    return this.gameState;
+};
+
+gameSetting.setGameState = function(state) {
+    if(state !== undefined) {
+        this.gameState = state;
     }
 };
 
@@ -679,18 +700,18 @@ gameSetting.itemCollidedCallback = function(type, item) {
     }
 
     //Player score or hearts may have affected, update player info display.
-    GameScreenDispatcher.trigger('player-info-render', gameSetting);
+    gameSetting.gameInfoDisplayUpdate();
 };
 
 //Todo: come up with a descriptive object to hold gameState codes: {'playing', 'choosing','wonGame', 'lostGame'}.
 gameSetting.wonLevelCallback = function() {
     this.gamePaused = true;
-    gameState = 3;
+    this.gameState = 3;
 };
 
 gameSetting.lostLevelCallback = function() {
     this.gamePaused = true;
-    gameState = 2;
+    this.gameState = 2;
 };
 
 gameSetting.addNewItemCallback = function() {
@@ -828,8 +849,8 @@ function choosingCharacters(movement) {
                     break;
             }
 
-            gameState = 1; //playing
-            GameScreenDispatcher.trigger('player-info-render', gameSetting);
+            gameSetting.setGameState(1); //playing
+            gameSetting.gameInfoDisplayUpdate();
             player.reset();
             break;
     }
@@ -849,9 +870,10 @@ document.addEventListener('keyup', function(e) {
     };
 
     if ((e.keyCode >= 37 && e.keyCode <= 40) || e.keyCode === 13 || e.keyCode === 32) {
-        if (gameState === 1) {
+        var stateOfGame = gameSetting.getGameState();
+        if (stateOfGame === 1) {
             player.handleInput(allowedKeys[e.keyCode]);
-        } else if (gameState === 0) {
+        } else if (stateOfGame === 0) {
             choosingCharacters(allowedKeys[e.keyCode]);
         }
     }

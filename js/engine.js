@@ -22,10 +22,7 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        lastTime,
-        characterChosen = 0,
-        gamePaused = false,
-        gameState = 0; //0:choosing,1:playing
+        lastTime;
 
     canvas.width = 505;
     canvas.height = 606;
@@ -111,7 +108,7 @@ var Engine = (function(global) {
             allEnemies.forEach(function(enemy) {
                 enemy.update(dt);
             });
-            player.update(dt, this.gameState);
+            player.update(dt, gameSetting.getGameState());
         }
     }
 
@@ -228,7 +225,7 @@ var Engine = (function(global) {
          * for that particular row of the game level.
          */
         clearScreen();
-        switch(this.gameState) {
+        switch(gameSetting.getGameState()) {
             case 1://playing
                 playing();
                 if(gameSetting.getGamePaused()){
@@ -314,6 +311,4 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
-    global.gameState = gameState;
-    global.gamePaused = gamePaused;
 })(this);
